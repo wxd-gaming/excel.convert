@@ -110,6 +110,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="excel\DataTable.cs" />
+    <Compile Include="excel\ExcelRead.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
