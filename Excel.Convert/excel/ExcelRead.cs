@@ -13,6 +13,11 @@ namespace Excel.Convert.excel
     public class ExcelRead
     {
 
+        /// <summary>
+        /// 所有的表
+        /// </summary>
+        public Dictionary<string, DataTable> tables = new Dictionary<string, DataTable>();
+
         public void ReadExcel(string excelPath)
         {
             try
@@ -35,83 +40,101 @@ namespace Excel.Convert.excel
                     }
                     if (wk.NumberOfSheets > 0)
                     {
-                        var table = wk.GetSheetAt(0);
-                        this.SheetName = ReplaceSideLine(table.SheetName).ToLower().Trim();
-                        this.FileName = Path.GetFileName(excelPath);
-                        string filename = Path.GetFileName(excelPath);
-                        show("开始分析文件：" + filename + " 文件数据");
-                        if (table != null)
+                        for (int i = 0; i < wk.NumberOfSheets; i++)
                         {
-                            if (table.LastRowNum < 3)
-                            {
-                                show("文件格式是第一行是字段类型，第二行字段命名，第三行是注释，第四行是归属");
-                                return false;
-                            }
-
-                            IRow rowType = table.GetRow(0);  //字段类型行
-                            IRow rowTitle = table.GetRow(1);  //字段名字行
-                            IRow rowNontes = table.GetRow(2);  //读取配置说明
-                            IRow rowGuishus = table.GetRow(3);  //字段归属
-
-                            if (table.LastRowNum > 3)
-                            {
-                                for (int i = 4; i <= table.LastRowNum; i++)
-                                {
-                                    IRow rowData = table.GetRow(i); //读取当前行数据
-                                    if (rowData != null)
-                                    {
-                                        // 处理如果该行为空值那么忽略
-                                        // todo 考虑怎么添加
-                                        for (int k = 0; k < rowTitle.LastCellNum; k++)
-                                        {
-                                            ICell cell2 = rowData.GetCell(k);  //当前表格
-                                            if (cell2 != null && !string.IsNullOrWhiteSpace(cell2.ToString())) { goto lab_xx; }
-                                        }
-                                        return true;
-                                    lab_xx:
-                                        ExcelData.ExcelDataRow datarow = new ExcelData.ExcelDataRow();
-                                        for (int k = 0; k < rowTitle.LastCellNum; k++)  //LastCellNum 是当前行的总列数
-                                        {
-                                            try
-                                            {
-                                                GetExcelPropertyType(filename, rowType.GetCell(k), rowTitle.GetCell(k), rowNontes.GetCell(k), rowGuishus.GetCell(k), rowData.GetCell(k), ref datarow);
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                show("文件：" + Path.GetFileName(excelPath) + " 取值错误 第 " + (i + 1) + " 行 " + " 第 " + (k + 1) + " 列 " + ex.ToString());
-                                                return false;
-                                            }
-                                        }
-                                        if (string.IsNullOrWhiteSpace(datarow.AtKey))
-                                        {
-                                            show("文件：" + Path.GetFileName(excelPath) + " 缺少主键");
-                                            return false;
-                                        }
-                                        if (Rows.ContainsKey(datarow.AtKey))
-                                        {
-                                            show("文件：" + Path.GetFileName(excelPath) + " 存在重复主键 " + datarow.AtKey + " 第 " + (i + 1) + " 行 ");
-                                            return false;
-                                        }
-
-                                        if (datarow.Cells.Values.Where(l => l.IsPKey).Count() > 1)
-                                        {
-                                            show("文件：" + Path.GetFileName(excelPath) + " 不支持双主键设置");
-                                            return false;
-                                        }
-                                        Rows.Add(datarow.AtKey, datarow);
-                                    }
-                                }
-                            }
-                            return true;
+                            ISheet sheet = wk.GetSheetAt(i);
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                show("请确保是2003或者wps创建的excel文件并且处于关闭状态：" + Path.GetFileName(excelPath));
+                FormMain.ShowLog.Invoke("请确保是2003或者wps创建的excel文件并且处于关闭状态：" + Path.GetFileName(excelPath));
                 Console.WriteLine(e);
             }
         }
+
+
+        public void ActionColumn(ISheet sheet)
+        {
+            //这里是记录行
+            int lastRowNum = sheet.LastRowNum;
+
+            if (lastRowNum < 2)
+            {
+                FormMain.ShowLog.Invoke("文件格式是第一行是字段类型，第二行字段命名，第三行是注释，第四行是归属");
+                return;
+            }
+
+            IRow rowType = sheet.GetRow(0);    //字段名字行和类型型行
+            IRow rowNontes = sheet.GetRow(1);  //读取配置说明
+
+            short lastCellNum = rowType.LastCellNum;
+            if (lastCellNum < 0)
+            {
+                FormMain.ShowLog.Invoke("文件格式是第一行是字段类型，第二行字段命名，第三行是注释，第四行是归属");
+            }
+
+            string sheetName = Convert(sheet.SheetName);
+            if (!tables.ContainsKey(sheetName))
+            {
+                tables[sheetName] = new DataTable();
+            }
+
+            DataTable dataTable = tables[sheetName];
+            dataTable.Name = sheetName;
+            HashSet<string> columnNames = new HashSet<string>();
+            for (int i = 0; i < lastCellNum; i++)
+            {
+                ICell columnCell = rowType.GetCell(i);
+                ICell noiteCell = rowNontes.GetCell(i);
+                if (columnCell != null && !string.IsNullOrWhiteSpace(columnCell.StringCellValue))
+                {
+                    string columnName = columnCell.StringCellValue;
+                    if (!columnNames.Add(columnName))
+                    {
+                        FormMain.ShowLog.Invoke("存在相同的字段");
+                        return;
+                    }
+                    if (!dataTable.Columns.ContainsKey(columnName))
+                    {
+                        DataColumn dataColumn = new DataColumn();
+                        dataColumn.Name = columnName;
+                        dataColumn.Comment = noiteCell == null ? "" : noiteCell.StringCellValue;
+                        if (string.IsNullOrWhiteSpace(dataColumn.Comment))
+                        {
+                            dataColumn.Comment = "";
+                        }
+                        dataTable.Columns[columnName] = dataColumn;
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 读取数据行
+        /// </summary>
+        /// <param name="sheet"></param>
+        public void ActionData(ISheet sheet)
+        {
+
+        }
+
+        public string Convert(object obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+            string v = obj.ToString();
+            if ("class".Equals(v, StringComparison.OrdinalIgnoreCase))
+            {
+                v = "clazz";
+            }
+            v = v.Replace("-", "_");
+            return v;
+        }
+
     }
 }

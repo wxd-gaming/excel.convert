@@ -6,31 +6,30 @@ using System.Threading.Tasks;
 
 namespace Excel.Convert.excel
 {
-    public class DataTable
+    public class DataColumn
     {
 
-
         /// <summary>
-        /// 表名
+        /// 名字
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 注释
+        /// 注解
         /// </summary>
         public string Comment { get; set; }
         /// <summary>
-        /// 
+        /// 类型
         /// </summary>
-        public DataColumn KeyColumn { get; set; }
+        public string ValueType { get; set; }
+        /// <summary>
+        /// 数据列最大长度
+        /// </summary>
+        public int MaxLen { get; set; }
+        /// <summary>
+        /// 主键
+        /// </summary>        
+        public bool Key { get; set; }
 
-        /// <summary>
-        /// 所有的字段
-        /// </summary>
-        public Dictionary<string, DataColumn> Columns = new Dictionary<string, DataColumn>();
-        /// <summary>
-        /// 所有行
-        /// </summary>
-        public List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
 
     }
 }

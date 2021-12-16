@@ -110,6 +110,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="excel\DataColumn.cs" />
     <Compile Include="excel\DataTable.cs" />
     <Compile Include="excel\ExcelRead.cs" />
     <Compile Include="FormMain.cs">
@@ -118,6 +119,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="ItemFileInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">
