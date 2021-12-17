@@ -27,17 +27,17 @@ namespace Excel.Convert.excel.entity
 
         }
 
-        public string CreateCode_Bean(DataTable dataTable)
+        public void CreateCode_Bean(DataTable dataTable)
         {
 
         }
 
-        public string CreateCode_Bean_Exent(DataTable dataTable)
+        public void CreateCode_Bean_Exent(DataTable dataTable)
         {
 
         }
 
-        public string CreateCode_Bean(DataTable dataTable)
+        public void CreateCode_Bean_Factory(DataTable dataTable)
         {
 
         }

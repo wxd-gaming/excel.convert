@@ -338,7 +338,7 @@ namespace Excel.Convert.excel
             }
         }
 
-        private object CellValue(ICell item)
+        private string CellValue(ICell item)
         {
             if (item == null)
             {
@@ -347,7 +347,7 @@ namespace Excel.Convert.excel
             switch (item.CellType)
             {
                 case CellType.Boolean:
-                    return item.BooleanCellValue;
+                    return item.BooleanCellValue.ToString();
 
                 case CellType.Error:
                     return ErrorEval.GetText(item.ErrorCellValue);
@@ -356,7 +356,7 @@ namespace Excel.Convert.excel
                     switch (item.CachedFormulaResultType)
                     {
                         case CellType.Boolean:
-                            return item.BooleanCellValue;
+                            return item.BooleanCellValue.ToString();
 
                         case CellType.Error:
                             return ErrorEval.GetText(item.ErrorCellValue);
@@ -368,7 +368,7 @@ namespace Excel.Convert.excel
                             }
                             else
                             {
-                                return item.NumericCellValue;
+                                return item.NumericCellValue.ToString();
                             }
                         case CellType.String:
                             string str = item.StringCellValue;
@@ -392,7 +392,7 @@ namespace Excel.Convert.excel
                     }
                     else
                     {
-                        return item.NumericCellValue;
+                        return item.NumericCellValue.ToString();
                     }
                 case CellType.String:
                     string strValue = item.StringCellValue;
@@ -407,7 +407,7 @@ namespace Excel.Convert.excel
 
         private object CellValue(string type, ICell cell)
         {
-            object v = CellValue(cell);
+            string v = CellValue(cell);
             object revert = null;
             try
             {

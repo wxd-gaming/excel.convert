@@ -15,7 +15,7 @@ namespace Excel.Convert
         /// </summary>
         /// <param name="dataTable"></param>
         /// <returns></returns>
-        void CreateCode(DataTable dataTable);
+        void CreateCode(string outPath, string package, DataTable dataTable);
 
     }
 }
