@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Excel.Convert.excel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +25,20 @@ namespace Excel.Convert
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 递归查找文件
+        /// </summary>
+        /// <param name="path"></param>
+        void FindFiles(string path)
+        {
+            AddFileViwe(Directory.GetFiles(path));
+            var paths = Directory.GetDirectories(path);
+            foreach (var item in paths)
+            {
+                FindFiles(item);
+            }
+        }
+
         void AddFileViwe(string[] fileNames)
         {
             var temps = (this.lb_files.Tag as List<ItemFileInfo>);
@@ -31,7 +47,10 @@ namespace Excel.Convert
                 string extname = System.IO.Path.GetExtension(itemFile);
                 string name = System.IO.Path.GetFileName(itemFile);
                 string extnameLower = extname.ToLower();
-                if (".xml".Equals(extnameLower) || ".proto".Equals(extnameLower) || ".xml".Equals(extnameLower))
+                if (".xls".Equals(extnameLower, StringComparison.OrdinalIgnoreCase)
+                    || ".xlsx".Equals(extnameLower, StringComparison.OrdinalIgnoreCase)
+                    || ".proto".Equals(extnameLower, StringComparison.OrdinalIgnoreCase)
+                    || ".xml".Equals(extnameLower, StringComparison.OrdinalIgnoreCase))
                 {
                     var tifi = temps.FirstOrDefault(l => l.Name == name);
                     if (tifi == null)
@@ -39,10 +58,11 @@ namespace Excel.Convert
                         var ifi = new ItemFileInfo(itemFile);
                         (this.lb_files.Tag as List<ItemFileInfo>).Add(ifi);
                         this.lb_files.Items.Add(ifi);
+                        ShowLog.Invoke("选择的文件：" + itemFile);
                     }
                     else
                     {
-                        ShowLog.Invoke("无需添加的文件：" + name);
+                        ShowLog.Invoke("重复的文件：" + itemFile);
                     }
                 }
             }
@@ -50,6 +70,38 @@ namespace Excel.Convert
             {
                 this.lb_files.SelectedIndex = 0;
             }
+        }
+
+        private ExcelRead GetExcelRead(params string[] extendNames)
+        {
+            ExcelRead excelRead = new ExcelRead();
+            GetCheckFiles(
+                (path) =>
+                {
+                    excelRead.ReadExcel(path);
+                },
+                extendNames);
+            return excelRead;
+        }
+
+        /// <summary>
+        /// 获取选择的文件
+        /// </summary>
+        /// <param name="extendName">文件扩展名</param>
+        private void GetCheckFiles(Action<string> call, params string[] extendName)
+        {
+            var temps = (this.lb_files.Tag as List<ItemFileInfo>);
+            foreach (ItemFileInfo item in temps)
+            {
+                foreach (string ext in extendName)
+                {
+                    if (ext.Equals(item.ExtensionName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        call.Invoke(item.Path);
+                    }
+                }
+            }
+
         }
 
         private void tsmi_check_file_Click(object sender, EventArgs e)
@@ -87,12 +139,54 @@ namespace Excel.Convert
         /// <param name="e"></param>
         private void tsmi_check_dir_Click(object sender, EventArgs e)
         {
-
+            this.BeginInvoke(new Action(() =>
+            {
+                if (open_dir.ShowDialog() == DialogResult.OK)
+                {
+                    FindFiles(open_dir.SelectedPath);
+                }
+            }));
         }
 
         private void tsmi_clear_file_Click(object sender, EventArgs e)
         {
             //删除一个文件
+            ListBox.SelectedObjectCollection selectedItems = this.lb_files.SelectedItems;
+            if (selectedItems != null && selectedItems.Count > 0)
+            {
+                var temps = (this.lb_files.Tag as List<ItemFileInfo>);
+                int count = selectedItems.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    ItemFileInfo v = (ItemFileInfo)selectedItems[i];
+                    temps.Remove(v);
+                    this.lb_files.Items.Remove(v);
+                }
+            }
         }
+
+        private void tsmi_clear_all_Click(object sender, EventArgs e)
+        {
+            this.lb_files.Items.Clear();
+            var temps = (this.lb_files.Tag as List<ItemFileInfo>);
+            temps.Clear();
+        }
+
+
+        private void tsmi_excel_json_Click(object sender, EventArgs e)
+        {
+            ExcelRead excelRead = GetExcelRead(".xls", ".xlsx");
+            foreach (var item in excelRead.Tables)
+            {
+                List<Dictionary<string, object>> rows = item.Value.Rows;
+                foreach (var row in rows)
+                {
+                    string v = Newtonsoft.Json.JsonConvert.SerializeObject(row);
+                    Console.WriteLine(v);
+                }
+                Console.WriteLine(item.Value.Name + ", " + item.Value.CodeName);
+            }
+        }
+
     }
 }

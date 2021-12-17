@@ -14,9 +14,17 @@ namespace Excel.Convert.excel
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// 代码名称
+        /// </summary>
+        public string CodeName { get; set; }
+        /// <summary>
         /// 注解
         /// </summary>
         public string Comment { get; set; }
+        /// <summary>
+        /// 归属，all ,server ,client 默认all
+        /// </summary>
+        public string BeLong { get; set; }
         /// <summary>
         /// 类型
         /// </summary>
@@ -24,7 +32,7 @@ namespace Excel.Convert.excel
         /// <summary>
         /// 数据列最大长度
         /// </summary>
-        public int MaxLen { get; set; }
+        public string SqlType { get; set; }
         /// <summary>
         /// 主键
         /// </summary>        

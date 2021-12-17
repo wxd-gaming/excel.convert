@@ -35,23 +35,25 @@
             this.tsmi_action_file = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_check_file = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_check_dir = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_clear_file = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_clear_all = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_action_text = new System.Windows.Forms.ToolStripMenuItem();
-            this.jsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_excel_json = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_excel_xml = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_action_sql = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_action_mysql = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_action_mongo = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_action_protobuf = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_help = new System.Windows.Forms.ToolStripMenuItem();
             this.tstb_help = new System.Windows.Forms.ToolStripTextBox();
+            this.tsmi_clear_log = new System.Windows.Forms.ToolStripMenuItem();
             this.open_dir = new System.Windows.Forms.FolderBrowserDialog();
             this.open_file = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tb_log = new System.Windows.Forms.TextBox();
-            this.tsmi_clear_log = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_clear_file = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_clear_all = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.gb_files.SuspendLayout();
             this.ms_main.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -64,7 +66,7 @@
             this.gb_files.Location = new System.Drawing.Point(0, 25);
             this.gb_files.Margin = new System.Windows.Forms.Padding(30, 3, 3, 3);
             this.gb_files.Name = "gb_files";
-            this.gb_files.Size = new System.Drawing.Size(200, 425);
+            this.gb_files.Size = new System.Drawing.Size(257, 441);
             this.gb_files.TabIndex = 0;
             this.gb_files.TabStop = false;
             this.gb_files.Text = "文件处理";
@@ -76,7 +78,7 @@
             this.lb_files.ItemHeight = 12;
             this.lb_files.Location = new System.Drawing.Point(3, 17);
             this.lb_files.Name = "lb_files";
-            this.lb_files.Size = new System.Drawing.Size(194, 405);
+            this.lb_files.Size = new System.Drawing.Size(251, 421);
             this.lb_files.TabIndex = 0;
             // 
             // ms_main
@@ -90,7 +92,7 @@
             this.tsmi_clear_log});
             this.ms_main.Location = new System.Drawing.Point(0, 0);
             this.ms_main.Name = "ms_main";
-            this.ms_main.Size = new System.Drawing.Size(800, 25);
+            this.ms_main.Size = new System.Drawing.Size(878, 25);
             this.ms_main.TabIndex = 1;
             this.ms_main.Text = "ms_main";
             // 
@@ -111,49 +113,89 @@
             // tsmi_check_file
             // 
             this.tsmi_check_file.Name = "tsmi_check_file";
-            this.tsmi_check_file.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_check_file.Size = new System.Drawing.Size(148, 22);
             this.tsmi_check_file.Text = "文件";
             this.tsmi_check_file.Click += new System.EventHandler(this.tsmi_check_file_Click);
             // 
             // tsmi_check_dir
             // 
             this.tsmi_check_dir.Name = "tsmi_check_dir";
-            this.tsmi_check_dir.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_check_dir.Size = new System.Drawing.Size(148, 22);
             this.tsmi_check_dir.Text = "文件夹";
             this.tsmi_check_dir.Click += new System.EventHandler(this.tsmi_check_dir_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
+            // 
+            // tsmi_clear_file
+            // 
+            this.tsmi_clear_file.Name = "tsmi_clear_file";
+            this.tsmi_clear_file.Size = new System.Drawing.Size(148, 22);
+            this.tsmi_clear_file.Text = "删除选中文件";
+            this.tsmi_clear_file.Click += new System.EventHandler(this.tsmi_clear_file_Click);
+            // 
+            // tsmi_clear_all
+            // 
+            this.tsmi_clear_all.Name = "tsmi_clear_all";
+            this.tsmi_clear_all.Size = new System.Drawing.Size(148, 22);
+            this.tsmi_clear_all.Text = "清空选择文件";
+            this.tsmi_clear_all.Click += new System.EventHandler(this.tsmi_clear_all_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(145, 6);
             // 
             // tsmi_exit
             // 
             this.tsmi_exit.Name = "tsmi_exit";
-            this.tsmi_exit.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_exit.Size = new System.Drawing.Size(148, 22);
             this.tsmi_exit.Text = "退出";
             // 
             // tsmi_action_text
             // 
             this.tsmi_action_text.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.jsonToolStripMenuItem,
-            this.xmlToolStripMenuItem});
+            this.tsmi_excel_json,
+            this.tsmi_excel_xml});
             this.tsmi_action_text.Name = "tsmi_action_text";
             this.tsmi_action_text.Size = new System.Drawing.Size(68, 21);
             this.tsmi_action_text.Text = "文本数据";
             // 
-            // jsonToolStripMenuItem
+            // tsmi_excel_json
             // 
-            this.jsonToolStripMenuItem.Name = "jsonToolStripMenuItem";
-            this.jsonToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-            this.jsonToolStripMenuItem.Text = "Json";
+            this.tsmi_excel_json.Name = "tsmi_excel_json";
+            this.tsmi_excel_json.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_excel_json.Text = "Excel to Json";
+            this.tsmi_excel_json.Click += new System.EventHandler(this.tsmi_excel_json_Click);
             // 
-            // xmlToolStripMenuItem
+            // tsmi_excel_xml
             // 
-            this.xmlToolStripMenuItem.Name = "xmlToolStripMenuItem";
-            this.xmlToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-            this.xmlToolStripMenuItem.Text = "Xml";
+            this.tsmi_excel_xml.Name = "tsmi_excel_xml";
+            this.tsmi_excel_xml.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_excel_xml.Text = "Excel to Xml";
             // 
             // tsmi_action_sql
             // 
+            this.tsmi_action_sql.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_action_mysql,
+            this.tsmi_action_mongo});
             this.tsmi_action_sql.Name = "tsmi_action_sql";
             this.tsmi_action_sql.Size = new System.Drawing.Size(56, 21);
             this.tsmi_action_sql.Text = "数据库";
+            // 
+            // tsmi_action_mysql
+            // 
+            this.tsmi_action_mysql.Name = "tsmi_action_mysql";
+            this.tsmi_action_mysql.Size = new System.Drawing.Size(119, 22);
+            this.tsmi_action_mysql.Text = "Mysql";
+            // 
+            // tsmi_action_mongo
+            // 
+            this.tsmi_action_mongo.Name = "tsmi_action_mongo";
+            this.tsmi_action_mongo.Size = new System.Drawing.Size(119, 22);
+            this.tsmi_action_mongo.Text = "Mongo";
             // 
             // tsmi_action_protobuf
             // 
@@ -176,18 +218,26 @@
             this.tstb_help.Size = new System.Drawing.Size(100, 23);
             this.tstb_help.Text = "帮助";
             // 
+            // tsmi_clear_log
+            // 
+            this.tsmi_clear_log.Name = "tsmi_clear_log";
+            this.tsmi_clear_log.Size = new System.Drawing.Size(68, 21);
+            this.tsmi_clear_log.Text = "清理输出";
+            this.tsmi_clear_log.Click += new System.EventHandler(this.tsmi_clear_log_Click);
+            // 
             // open_file
             // 
             this.open_file.FileName = "open_file";
             this.open_file.Filter = "工具可读文件|*.xls;*.xlsx;*.proto;*.xml";
+            this.open_file.Multiselect = true;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.tb_log);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox1.Location = new System.Drawing.Point(206, 25);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(257, 25);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(594, 425);
+            this.groupBox1.Size = new System.Drawing.Size(621, 441);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "输出";
@@ -198,44 +248,16 @@
             this.tb_log.Location = new System.Drawing.Point(3, 17);
             this.tb_log.Multiline = true;
             this.tb_log.Name = "tb_log";
-            this.tb_log.Size = new System.Drawing.Size(588, 405);
+            this.tb_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tb_log.Size = new System.Drawing.Size(615, 421);
             this.tb_log.TabIndex = 0;
-            // 
-            // tsmi_clear_log
-            // 
-            this.tsmi_clear_log.Name = "tsmi_clear_log";
-            this.tsmi_clear_log.Size = new System.Drawing.Size(68, 21);
-            this.tsmi_clear_log.Text = "清理输出";
-            this.tsmi_clear_log.Click += new System.EventHandler(this.tsmi_clear_log_Click);
-            // 
-            // tsmi_clear_file
-            // 
-            this.tsmi_clear_file.Name = "tsmi_clear_file";
-            this.tsmi_clear_file.Size = new System.Drawing.Size(180, 22);
-            this.tsmi_clear_file.Text = "删除选中文件";
-            this.tsmi_clear_file.Click += new System.EventHandler(this.tsmi_clear_file_Click);
-            // 
-            // tsmi_clear_all
-            // 
-            this.tsmi_clear_all.Name = "tsmi_clear_all";
-            this.tsmi_clear_all.Size = new System.Drawing.Size(180, 22);
-            this.tsmi_clear_all.Text = "清空选择文件";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.tb_log.WordWrap = false;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(878, 466);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gb_files);
             this.Controls.Add(this.ms_main);
@@ -266,8 +288,8 @@
         private System.Windows.Forms.ToolStripMenuItem tsmi_check_dir;
         private System.Windows.Forms.ToolStripMenuItem tsmi_exit;
         private System.Windows.Forms.ToolStripMenuItem tsmi_action_text;
-        private System.Windows.Forms.ToolStripMenuItem jsonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem xmlToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_excel_json;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_excel_xml;
         private System.Windows.Forms.ToolStripMenuItem tsmi_action_sql;
         private System.Windows.Forms.ToolStripMenuItem tsmi_action_protobuf;
         private System.Windows.Forms.FolderBrowserDialog open_dir;
@@ -279,6 +301,8 @@
         private System.Windows.Forms.ToolStripMenuItem tsmi_clear_file;
         private System.Windows.Forms.ToolStripMenuItem tsmi_clear_all;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_action_mysql;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_action_mongo;
     }
 }
 

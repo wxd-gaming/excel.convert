@@ -15,6 +15,10 @@ namespace Excel.Convert.excel
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// 代码名称
+        /// </summary>
+        public string CodeName { get; set; }
+        /// <summary>
         /// 注释
         /// </summary>
         public string Comment { get; set; }
@@ -30,7 +34,7 @@ namespace Excel.Convert.excel
         /// <summary>
         /// 所有行
         /// </summary>
-        public List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+        public List<Dictionary<string, object>> Rows = new List<Dictionary<string, object>>();
 
     }
 }
