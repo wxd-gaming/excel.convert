@@ -29,68 +29,14 @@ namespace Net.Sz.Framework.Script
     {
 
         HashSet<String> ddlNames = new HashSet<String>();
-
         //                        接口名称                 类全称命名空间
-        private Dictionary<String, ICreateCode> ScriptInstances = new Dictionary<String, ICreateCode>();
+        private Dictionary<string, IOutPutPlugs> ScriptInstances = new Dictionary<string, IOutPutPlugs>();
 
         /// <summary>
         /// 
         /// </summary>
-        public ScriptPool() { }
-
-        #region 返回查找的脚本实例 public IEnumerable<T> Instances<T>()
-        /// <summary>
-        /// 返回查找的脚本实例
-        /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <returns></returns>
-        public IEnumerable<ICreateCode> GetScripts()
+        public ScriptPool()
         {
-            //使用枚举迭代器，避免了再一次创建对象
-            foreach (var item in ScriptInstances)
-            {
-                yield return item.Value;
-            }
-        }
-        #endregion
-
-        #region 根据指定的文件动态编译获取实例 public void LoadCSharpFile(string[] paths, List<String> extensionNames, params string[] dllName)
-        /// <summary>
-        /// 根据指定的文件动态编译获取实例
-        /// <para>如果需要加入调试信息，加入代码 System.Diagnostics.Debugger.Break();</para>
-        /// <para>如果传入的是目录。默认只会加载目录中后缀“.cs”文件</para>
-        /// </summary>
-        /// <param name="paths">
-        /// 可以是目录也可以是文件路径
-        /// </param>
-        /// <param name="dllName">加载的附加DLL文件的路径，绝对路径</param>
-        public List<String> LoadCSharpFile(string[] paths, params string[] dllName)
-        {
-            return LoadCSharpFile(paths, null, dllName);
-        }
-
-        List<String> csExtensionNames = new List<String>() { ".cs" };
-        string exts = ".dll,.exe,";
-
-        /// <summary>
-        /// 根据指定的文件动态编译获取实例
-        /// <para>如果需要加入调试信息，加入代码 System.Diagnostics.Debugger.Break();</para>
-        /// <para>如果传入的是目录。默认只会加载目录中后缀“.cs”文件</para>
-        /// </summary>
-        /// <param name="paths">
-        /// 可以是目录也可以是文件路径
-        /// </param>
-        /// <param name="extensionNames">需要加载目录中的文件后缀</param>
-        /// <param name="dllName">加载的附加DLL文件的路径，绝对路径</param>
-        public List<String> LoadCSharpFile(String[] paths, List<String> extensionNames, params String[] dllName)
-        {
-            List<String> retStrs = new List<String>();
-            if (extensionNames == null)
-            {
-                extensionNames = csExtensionNames;
-            }
-
-
             var asss = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var item in asss)
             {
@@ -98,8 +44,9 @@ namespace Net.Sz.Framework.Script
                 {
                     if (!item.ManifestModule.IsResource() && !"<未知>".Equals(item.ManifestModule.FullyQualifiedName))
                     {
+                        /*附加类库*/
                         String ext = System.IO.Path.GetExtension(item.ManifestModule.FullyQualifiedName).ToLower();
-                        if (exts.Contains(ext))
+                        if (".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase))
                         {
                             ddlNames.Add(item.ManifestModule.FullyQualifiedName);
                         }
@@ -110,25 +57,51 @@ namespace Net.Sz.Framework.Script
                     FormMain.ShowLog("查找需要的dll路径错误1：" + item.ManifestModule.FullyQualifiedName + ex);
                 }
             }
-
-            foreach (var item in dllName)
+            List<String> fileNames = new List<String>();
+            GetFiles(System.AppDomain.CurrentDomain.BaseDirectory, ".dll", ref fileNames);
+            foreach (var item in fileNames)
             {
-                try
-                {
-                    String ext = System.IO.Path.GetExtension(item).ToLower();
-                    if (exts.Contains(ext))
-                    {
-                        ddlNames.Add(item);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    FormMain.ShowLog("查找需要的dll路径错误2：" + item + ex);
-                }
+                ddlNames.Add(item);
             }
+        }
+
+        /// <summary>
+        /// 返回查找的脚本实例
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <returns></returns>
+        public IEnumerable<IOutPutPlugs> Enumerable()
+        {
+            //使用枚举迭代器，避免了再一次创建对象
+            foreach (var item in ScriptInstances.Values)
+            {
+                yield return item;
+            }
+        }
+
+        public IOutPutPlugs GetPlugs(string name)
+        {
+            //使用枚举迭代器，避免了再一次创建对象
+            if (ScriptInstances.ContainsKey(name))
+            {
+                return ScriptInstances[name];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 根据指定的文件动态编译获取实例
+        /// <para>如果需要加入调试信息，加入代码 System.Diagnostics.Debugger.Break();</para>
+        /// <para>如果传入的是目录。默认只会加载目录中后缀“.cs”文件</para>
+        /// </summary>
+        /// <param name="path">可以是目录也可以是文件路径</param>
+        public List<String> LoadCSharpFile(String path)
+        {
+            List<String> retStrs = new List<String>();
+
 
             List<String> fileNames = new List<String>();
-            ActionPath(paths, extensionNames, ref fileNames);
+            GetFiles(path, ".cs", ref fileNames);
             if (fileNames.Count == 0) { retStrs.Add("目录不存在任何脚本文件"); return retStrs; }
 
             CSharpCodeProvider provider = new CSharpCodeProvider();
@@ -153,102 +126,18 @@ namespace Net.Sz.Framework.Script
             }
             else
             {
-                Dictionary<string, ICreateCode> tempInstances = new Dictionary<string, ICreateCode>();
-                ActionAssembly(result.CompiledAssembly, tempInstances, retStrs);
-                if (retStrs.Count == 0 && tempInstances.Count > 0)
-                {
-                    this.ScriptInstances = tempInstances;
-                }
-            }
-            return retStrs;
-        }
-        #endregion
-
-        #region 根据指定的文件动态编译获取实例 public void LoadDll(string[] paths)
-
-        List<String> dllExtensionNames = new List<String>() { ".dll", ".DLL" };
-
-        /// <summary>
-        /// 根据指定的文件动态编译获取实例
-        /// <para>如果需要加入调试信息，加入代码 System.Diagnostics.Debugger.Break();</para>
-        /// </summary>
-        /// <param name="paths">
-        /// 可以是目录也可以是文件路径
-        /// <para>如果传入的是目录。只会加载目录中后缀“.dll”,“.DLL”文件</para>
-        /// </param>
-        public List<String> LoadDllFromBinary(params string[] paths)
-        {
-            List<String> retStrs = new List<String>();
-            List<String> fileNames = new List<String>();
-            ActionPath(paths, dllExtensionNames, ref fileNames);
-            if (fileNames.Count == 0) { retStrs.Add("目录不存在任何脚本文件"); return retStrs; }
-            try
-            {
-                List<byte> bFile = new List<byte>();
-                Dictionary<string, ICreateCode> tempInstances = new Dictionary<string, ICreateCode>();
-                foreach (var path in fileNames)
-                {
-                    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                    {
-                        using (BinaryReader br = new BinaryReader(fs))
-                        {
-                            bFile.AddRange(br.ReadBytes((int)fs.Length));
-                        }
-                    }
-                }
-                ActionAssembly(Assembly.Load(bFile.ToArray()), tempInstances, retStrs);
-                if (retStrs.Count == 0 && tempInstances.Count > 0)
-                {
-                    this.ScriptInstances = tempInstances;
-                }
-            }
-            catch (Exception ex)
-            {
-                FormMain.ShowLog("动态加载文件" + ex);
+                ActionAssembly(result.CompiledAssembly, retStrs);
             }
             return retStrs;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="paths"></param>
-        public List<String> LoadDllFromFile(params string[] paths)
-        {
-            List<String> retStrs = new List<String>();
-            List<String> fileNames = new List<String>();
-            ActionPath(paths, dllExtensionNames, ref fileNames);
-            if (fileNames.Count == 0) { retStrs.Add("目录不存在任何脚本文件"); return retStrs; }
-            Dictionary<string, ICreateCode> tempInstances = new Dictionary<string, ICreateCode>();
-            foreach (var path in fileNames)
-            {
-                try
-                {
-                    ActionAssembly(Assembly.LoadFrom(path), tempInstances, retStrs);
-                }
-                catch (Exception ex)
-                {
-                    FormMain.ShowLog("动态加载文件" + ex);
-                }
-            }
-
-            if (retStrs.Count == 0 && tempInstances.Count > 0)
-            {
-                this.ScriptInstances = tempInstances;
-            }
-            return retStrs;
-        }
-        #endregion
-
-        #region 处理加载出来的实例 void ActionAssembly(Assembly assembly)
-        string baseScriptName = typeof(ICreateCode).Name;
         /// <summary>
         /// 处理加载出来的实例
         /// </summary>
         /// <param name="assembly"></param>
         /// <param name="tempInstances"></param>
         /// <param name="retStrs"></param>
-        void ActionAssembly(Assembly assembly, Dictionary<string, ICreateCode> tempInstances, List<String> retStrs)
+        void ActionAssembly(Assembly assembly, List<String> retStrs)
         {
             //获取加载的所有对象模型
             Type[] instances = assembly.GetExportedTypes();
@@ -264,21 +153,26 @@ namespace Net.Sz.Framework.Script
                     Type[] interfaces = itemType.GetInterfaces();
                     if (interfaces == null || interfaces.Length == 0)
                     {
-                        FormMain.ShowLog("动态加载 " + itemType.FullName + " 没有实现 ICreateCode 接口");
+                        FormMain.ShowLog("动态加载 " + itemType.FullName + " 没有实现 IOutPutPlugs 接口");
                         continue;
                     }
 
                     //生成实例
                     object obj = assembly.CreateInstance(itemType.FullName);
 
-                    if (obj is ICreateCode)
+                    if (obj is IOutPutPlugs)
                     {
-                        tempInstances[itemType.FullName] = (ICreateCode)obj;
-                        FormMain.ShowLog("动态加载实例：" + itemType.FullName);
+                        IOutPutPlugs plug = (IOutPutPlugs)obj;
+                        if (ScriptInstances.ContainsKey(plug.PlugsName()))
+                        {
+                            FormMain.ShowLog("重复插件命名：" + plug.PlugsName() + ", 文件：" + itemType.FullName);
+                        }
+                        ScriptInstances[plug.PlugsName()] = plug;
+                        FormMain.ShowLog("加载插件：" + itemType.FullName);
                     }
                     else
                     {
-                        FormMain.ShowLog("动态加载 " + itemType.FullName + " 没有实现 ICreateCode 接口");
+                        FormMain.ShowLog("动态加载 " + itemType.FullName + " 没有实现 IOutPutPlugs 接口");
                     }
                 }
                 catch (Exception ex)
@@ -288,50 +182,14 @@ namespace Net.Sz.Framework.Script
                 }
             }
         }
-        #endregion
 
-        #region 处理传入的路径 void ActionPath(string[] paths, List<String> extensionNames, ref List<String> fileNames)
-        /// <summary>
-        /// 处理传入的路径，
-        /// </summary>
-        /// <param name="paths"></param>
-        /// <param name="extensionNames"></param>
-        /// <param name="fileNames"></param>
-        void ActionPath(string[] paths, List<String> extensionNames, ref List<String> fileNames)
-        {
-            foreach (var tempPath in paths)
-            {
-                string path = Path.GetFullPath(tempPath);
-                FormMain.ShowLog(path);
-                if (System.IO.Path.HasExtension(path))
-                {
-                    if (System.IO.File.Exists(path))
-                    {
-                        fileNames.Add(path);
-                        //编译文件
-                        FormMain.ShowLog("动态加载文件：" + path);
-                    }
-                    else
-                    {
-                        FormMain.ShowLog("动态加载文件 无法找到文件：" + path);
-                    }
-                }
-                else
-                {
-                    GetFiles(path, extensionNames, ref fileNames);
-                }
-            }
-        }
-        #endregion
-
-        #region 根据指定文件夹获取指定路径里面全部文件 void GetFiles(string sourceDirectory, List<String> extensionNames, ref  List<String> fileNames)
         /// <summary>
         /// 根据指定文件夹获取指定路径里面全部文件
         /// </summary>
         /// <param name="sourceDirectory">目录</param>
         /// <param name="extensionNames">需要获取的文件扩展名</param>
         /// <param name="fileNames">返回文件名</param>
-        void GetFiles(string sourceDirectory, List<String> extensionNames, ref List<String> fileNames)
+        void GetFiles(string sourceDirectory, string extension, ref List<String> fileNames)
         {
             if (!Directory.Exists(sourceDirectory))
             {
@@ -346,11 +204,11 @@ namespace Net.Sz.Framework.Script
                     if (System.IO.File.Exists(path))
                     {
                         string extName = System.IO.Path.GetExtension(path);
-                        if (extensionNames.Contains(extName))
+                        if (extension.Equals(extName, StringComparison.OrdinalIgnoreCase))
                         {
                             fileNames.Add(path);
                             //编译文件
-                            FormMain.ShowLog("动态加载文件：" + path);
+                            Console.WriteLine("动态加载文件：" + path);
                         }
                     }
                     else
@@ -364,9 +222,8 @@ namespace Net.Sz.Framework.Script
             foreach (string directionPath in directionName)
             {
                 //递归下去
-                GetFiles(directionPath, extensionNames, ref fileNames);
+                GetFiles(directionPath, extension, ref fileNames);
             }
         }
-        #endregion
     }
 }

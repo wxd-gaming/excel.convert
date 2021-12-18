@@ -110,9 +110,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="code\IOutPutPlugs.cs" />
     <Compile Include="excel\DataColumn.cs" />
     <Compile Include="excel\DataTable.cs" />
-    <Compile Include="tmplet\ExcelRead2JavaCode.cs" />
+    <Compile Include="GlobalConfig.cs" />
+    <Compile Include="plugs\OutPut2JavaCode.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="excel\ExcelRead.cs" />
     <Compile Include="excel\sql\ExcelRead2Mysql.cs" />
     <Compile Include="FormMain.cs">
@@ -121,13 +125,15 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="code\ICreateCode.cs" />
     <Compile Include="ItemFileInfo.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="excel\sql\DbHelper.cs" />
     <Compile Include="code\ScriptPool.cs" />
+    <Compile Include="plugs\OutPut2JsonFile.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>

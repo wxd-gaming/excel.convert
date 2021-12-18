@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace Excel.Convert
 {
-    public interface ICreateCode
+    public interface IOutPutPlugs
     {
+
+        string PlugsName();
 
         /// <summary>
         /// 创建 映射 entity
         /// </summary>
         /// <param name="dataTable"></param>
         /// <returns></returns>
-        void CreateCode(string outPath, string package, DataTable dataTable);
+        void OutPut(DataTable dataTable);
 
     }
 }

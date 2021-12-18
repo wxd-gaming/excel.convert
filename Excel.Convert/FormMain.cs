@@ -1,4 +1,5 @@
 ﻿using Excel.Convert.excel;
+using Net.Sz.Framework.Script;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +20,8 @@ namespace Excel.Convert
         /// 显示日志
         /// </summary>         
         public static Action<string> ShowLog { get; set; }
+
+        ScriptPool scriptPool = null;
 
         public FormMain()
         {
@@ -123,8 +126,44 @@ namespace Excel.Convert
             };
 
             this.lb_files.Tag = new List<ItemFileInfo>();
-
             ShowLog.Invoke("欢迎使用 無心道 软件");
+            scriptPool = new ScriptPool();
+            scriptPool.LoadCSharpFile("plugs");
+            ToolStripMenuItem toolStripItem = (ToolStripMenuItem)this.ms_main.Items["tsmi_plugs"];
+            foreach (var item in scriptPool.Enumerable())
+            {
+                string plugName = item.PlugsName();
+
+                ToolStripItem ts = new ToolStripMenuItem();
+                ts.Name = plugName;
+                ts.Text = plugName;
+                ts.Click += new EventHandler(Plug_Click);
+                toolStripItem.DropDownItems.Add(ts);
+            }
+        }
+
+        private void tsmi_plus_all_Click(object sender, EventArgs e)
+        {
+            ExcelRead excelRead = GetExcelRead(".xls", ".xlsx");
+            foreach (var plug in scriptPool.Enumerable())
+            {
+                foreach (var item in excelRead.Tables)
+                {
+                    plug.OutPut(item.Value);
+                }
+            }
+        }
+
+        private void Plug_Click(object sender, EventArgs e)
+        {
+            ToolStripItem ts = (ToolStripItem)sender;
+            ExcelRead excelRead = GetExcelRead(".xls", ".xlsx");
+            IOutPutPlugs outPutPlugs = scriptPool.GetPlugs(ts.Name);
+            foreach (var item in excelRead.Tables)
+            {
+                excel.DataTable dataTable = item.Value;
+                outPutPlugs.OutPut(dataTable);
+            }
         }
 
         private void tsmi_clear_log_Click(object sender, EventArgs e)
@@ -172,21 +211,6 @@ namespace Excel.Convert
             temps.Clear();
         }
 
-
-        private void tsmi_excel_json_Click(object sender, EventArgs e)
-        {
-            ExcelRead excelRead = GetExcelRead(".xls", ".xlsx");
-            foreach (var item in excelRead.Tables)
-            {
-                List<Dictionary<string, object>> rows = item.Value.Rows;
-                foreach (var row in rows)
-                {
-                    string v = Newtonsoft.Json.JsonConvert.SerializeObject(row);
-                    Console.WriteLine(v);
-                }
-                Console.WriteLine(item.Value.Name + ", " + item.Value.CodeName);
-            }
-        }
 
     }
 }

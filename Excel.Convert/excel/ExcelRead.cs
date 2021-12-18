@@ -67,7 +67,6 @@ namespace Excel.Convert.excel
 
             if (lastRowNum < 2)
             {
-                FormMain.ShowLog.Invoke("文件格式是第一行是字段类型，第二行字段命名，第三行是注释，第四行是归属");
                 return;
             }
 
@@ -81,7 +80,7 @@ namespace Excel.Convert.excel
             short lastCellNum = columnRow.LastCellNum;
             if (lastCellNum < 0)
             {
-                FormMain.ShowLog.Invoke("文件格式是第一行是字段类型，第二行字段命名，第三行是注释，第四行是归属");
+                return;
             }
 
             string sheetName = Convert(sheet.SheetName);
@@ -99,7 +98,7 @@ namespace Excel.Convert.excel
 
             DataTable dataTable = Tables[sheetName];
             dataTable.Name = sheetName;
-            dataTable.CodeName = sheetName.CodeString();
+            dataTable.CodeName = sheetName.CodeString().FirstUpper();
 
             HashSet<string> columnNames = new HashSet<string>();
             for (int k = 0; k < lastCellNum; k++)
@@ -131,31 +130,29 @@ namespace Excel.Convert.excel
             HashSet<string> columnNames,
             ICell columnCell, ICell typeCell, ICell belongCell, ICell commontCell)
         {
-            object belong = CellValue(belongCell);
-            if (belong == null)
+            string belong = CellValue(belongCell);
+            string belongCase = null;
+            if (!string.IsNullOrWhiteSpace(belong))
             {
-                return null;
+                belongCase = belong.ToString().ToLower();
+                if ("no".Equals(belongCase) || belongCase.IndexOf("=hl") >= 0)
+                {
+                    Console.WriteLine("忽律字段");
+                    return null;
+                }
             }
-            string belongCase = belong.ToString().ToLower();
-            if ("no".Equals(belongCase) || belongCase.IndexOf("=hl") >= 0)
-            {
-                Console.WriteLine("忽律字段");
-                return null;
-            }
-            object v = CellValue(columnCell);
+            string v = CellValue(columnCell);
             if (v == null)
             {
                 return null;
             }
 
-            string v1 = v.ToString();
-
-            if (string.IsNullOrWhiteSpace(v1))
+            if (string.IsNullOrWhiteSpace(v))
             {
                 return null;
             }
 
-            string columnName = v1.Split('=')[0];
+            string columnName = v.Split('=')[0];
 
             if (columnNames != null && !columnNames.Add(columnName))
             {
@@ -168,17 +165,19 @@ namespace Excel.Convert.excel
                 dataColumn.Name = columnName;
                 dataColumn.CodeName = columnName.CodeString();
 
-                if ("client".Equals(belongCase) || belongCase.IndexOf("=ac") >= 0)
+                dataColumn.BeLong = "all";
+
+                if (!string.IsNullOrWhiteSpace(belongCase))
                 {
-                    dataColumn.BeLong = "client";
-                }
-                else if ("server".Equals(belongCase) || belongCase.IndexOf("=as") >= 0)
-                {
-                    dataColumn.BeLong = "server";
-                }
-                else
-                {
-                    dataColumn.BeLong = "all";
+
+                    if ("client".Equals(belongCase) || belongCase.IndexOf("=ac") >= 0)
+                    {
+                        dataColumn.BeLong = "client";
+                    }
+                    else if ("server".Equals(belongCase) || belongCase.IndexOf("=as") >= 0)
+                    {
+                        dataColumn.BeLong = "server";
+                    }
                 }
 
                 string vtype = typeCell.ToString().ToLower();
@@ -244,14 +243,14 @@ namespace Excel.Convert.excel
                     string[] vs = vtype.Split('=');
                     foreach (var item in vs)
                     {
-                        if (item.IndexOf("_") >= 0)
+                        if (item.IndexOf("s_") >= 0 || item.IndexOf("string_") >= 0)
                         {
                             string[] vs1 = item.Split('_');
                             try
                             {
                                 len = int.Parse(vs1[1]);
                             }
-                            catch (Exception) { }
+                            catch (Exception e) { Console.WriteLine(e); }
                         }
                     }
 
@@ -294,6 +293,12 @@ namespace Excel.Convert.excel
             }
             DataTable dataTable = Tables[sheetName];
             IRow columnRow = sheet.GetRow(0);
+
+            if (columnRow == null)
+            {
+                return;
+            }
+
             IRow typeRow = sheet.GetRow(0);
             IRow belongRow = sheet.GetRow(0);
             IRow commentRow = sheet.GetRow(1);
@@ -303,6 +308,10 @@ namespace Excel.Convert.excel
                 for (int i = 2; i <= sheet.LastRowNum; i++)
                 {
                     IRow rowData = sheet.GetRow(i); //读取当前行数据
+                    if (rowData == null)
+                    {
+                        return;
+                    }
                     // 处理如果该行为空值那么忽略
                     for (int k = 0; k < columnRow.LastCellNum; k++)
                     {

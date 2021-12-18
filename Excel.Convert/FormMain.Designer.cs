@@ -40,12 +40,7 @@
             this.tsmi_clear_all = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_exit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_action_text = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_excel_json = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_excel_xml = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_action_sql = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_action_mysql = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_action_mongo = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_plugs = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_action_protobuf = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_help = new System.Windows.Forms.ToolStripMenuItem();
             this.tstb_help = new System.Windows.Forms.ToolStripTextBox();
@@ -54,6 +49,8 @@
             this.open_file = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tb_log = new System.Windows.Forms.TextBox();
+            this.tsmi_plus_all = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.gb_files.SuspendLayout();
             this.ms_main.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -85,8 +82,7 @@
             // 
             this.ms_main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmi_action_file,
-            this.tsmi_action_text,
-            this.tsmi_action_sql,
+            this.tsmi_plugs,
             this.tsmi_action_protobuf,
             this.tsmi_help,
             this.tsmi_clear_log});
@@ -154,48 +150,14 @@
             this.tsmi_exit.Size = new System.Drawing.Size(148, 22);
             this.tsmi_exit.Text = "退出";
             // 
-            // tsmi_action_text
+            // tsmi_plugs
             // 
-            this.tsmi_action_text.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmi_excel_json,
-            this.tsmi_excel_xml});
-            this.tsmi_action_text.Name = "tsmi_action_text";
-            this.tsmi_action_text.Size = new System.Drawing.Size(68, 21);
-            this.tsmi_action_text.Text = "文本数据";
-            // 
-            // tsmi_excel_json
-            // 
-            this.tsmi_excel_json.Name = "tsmi_excel_json";
-            this.tsmi_excel_json.Size = new System.Drawing.Size(180, 22);
-            this.tsmi_excel_json.Text = "Excel to Json";
-            this.tsmi_excel_json.Click += new System.EventHandler(this.tsmi_excel_json_Click);
-            // 
-            // tsmi_excel_xml
-            // 
-            this.tsmi_excel_xml.Name = "tsmi_excel_xml";
-            this.tsmi_excel_xml.Size = new System.Drawing.Size(180, 22);
-            this.tsmi_excel_xml.Text = "Excel to Xml";
-            // 
-            // tsmi_action_sql
-            // 
-            this.tsmi_action_sql.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmi_action_mysql,
-            this.tsmi_action_mongo});
-            this.tsmi_action_sql.Name = "tsmi_action_sql";
-            this.tsmi_action_sql.Size = new System.Drawing.Size(56, 21);
-            this.tsmi_action_sql.Text = "数据库";
-            // 
-            // tsmi_action_mysql
-            // 
-            this.tsmi_action_mysql.Name = "tsmi_action_mysql";
-            this.tsmi_action_mysql.Size = new System.Drawing.Size(119, 22);
-            this.tsmi_action_mysql.Text = "Mysql";
-            // 
-            // tsmi_action_mongo
-            // 
-            this.tsmi_action_mongo.Name = "tsmi_action_mongo";
-            this.tsmi_action_mongo.Size = new System.Drawing.Size(119, 22);
-            this.tsmi_action_mongo.Text = "Mongo";
+            this.tsmi_plugs.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_plus_all,
+            this.toolStripSeparator3});
+            this.tsmi_plugs.Name = "tsmi_plugs";
+            this.tsmi_plugs.Size = new System.Drawing.Size(85, 21);
+            this.tsmi_plugs.Text = "Excel-Plugs";
             // 
             // tsmi_action_protobuf
             // 
@@ -253,6 +215,18 @@
             this.tb_log.TabIndex = 0;
             this.tb_log.WordWrap = false;
             // 
+            // tsmi_plus_all
+            // 
+            this.tsmi_plus_all.Name = "tsmi_plus_all";
+            this.tsmi_plus_all.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_plus_all.Text = "执行全部";
+            this.tsmi_plus_all.Click += new System.EventHandler(this.tsmi_plus_all_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -287,10 +261,6 @@
         private System.Windows.Forms.ToolStripMenuItem tsmi_check_file;
         private System.Windows.Forms.ToolStripMenuItem tsmi_check_dir;
         private System.Windows.Forms.ToolStripMenuItem tsmi_exit;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_action_text;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_excel_json;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_excel_xml;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_action_sql;
         private System.Windows.Forms.ToolStripMenuItem tsmi_action_protobuf;
         private System.Windows.Forms.FolderBrowserDialog open_dir;
         private System.Windows.Forms.OpenFileDialog open_file;
@@ -301,8 +271,9 @@
         private System.Windows.Forms.ToolStripMenuItem tsmi_clear_file;
         private System.Windows.Forms.ToolStripMenuItem tsmi_clear_all;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_action_mysql;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_action_mongo;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_plugs;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_plus_all;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 
