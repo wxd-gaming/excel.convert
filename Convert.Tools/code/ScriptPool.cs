@@ -1,6 +1,7 @@
 ﻿using Convert.Tools;
 using Microsoft.CSharp;
 using System;
+using System.Data;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -49,6 +50,7 @@ namespace Convert.Tools.Code
                         if (".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase))
                         {
                             ddlNames.Add(item.ManifestModule.FullyQualifiedName);
+                            Console.WriteLine(item.ManifestModule.FullyQualifiedName);
                         }
                     }
                 }

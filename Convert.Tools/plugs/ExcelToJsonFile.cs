@@ -23,20 +23,23 @@ namespace Plugs
         {
             return "导出 Json File";
         }
-        public void DoAction(object data)
+        public void DoAction(List<string> files)
         {
-            DataTable dataTable = data as DataTable;
-            string fileName = outPath + "\\" + dataTable.Name + ".json";
-            StringBuilder sb = new StringBuilder();
-            List<Dictionary<string, object>> rows = dataTable.Rows;
-            foreach (var row in rows)
+            List<ExcelDataTable> dataTables = files.AsDataTable();
+            foreach (ExcelDataTable dataTable in dataTables)
             {
-                string v = Newtonsoft.Json.JsonConvert.SerializeObject(row);
-                sb.Append(v).AppendLine();
+                string fileName = outPath + "\\" + dataTable.Name + ".json";
+                StringBuilder sb = new StringBuilder();
+                List<Dictionary<string, object>> rows = dataTable.Rows;
+                foreach (var row in rows)
+                {
+                    string v = Newtonsoft.Json.JsonConvert.SerializeObject(row);
+                    sb.Append(v).AppendLine();
+                }
+                sb.ToString().WriterFile(fileName);
             }
-            sb.ToString().WriterFile(fileName);
         }
 
-   
+
     }
 }

@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Convert.Tools.Code
 {
     public interface IOutPutPlugs
@@ -12,7 +14,7 @@ namespace Convert.Tools.Code
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        void DoAction(object data);
+        void DoAction(List<string> files);
 
     }
 }

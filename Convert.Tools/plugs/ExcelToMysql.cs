@@ -4,6 +4,7 @@ using Convert.Tools.Excel;
 using Convert.Tools.Sql;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Plugs
@@ -45,16 +46,18 @@ namespace Plugs
             return "导入 Mysql";
         }
 
-
-        public void DoAction(object data)
+        public void DoAction(List<string> files)
         {
-            DataTable dataTable = data as DataTable;
-
-            using (MySqlConnection connection = DbHelper.GetConnection(DbIp, DbPort, DbName, DbUser, DbPwd))
+            List<ExcelDataTable> dataTables = files.AsDataTable();
+            foreach (ExcelDataTable dataTable in dataTables)
             {
 
-            }
+                using (MySqlConnection connection = DbHelper.GetConnection(DbIp, DbPort, DbName, DbUser, DbPwd))
+                {
 
+                }
+
+            }
         }
 
     }

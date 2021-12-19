@@ -22,9 +22,8 @@ namespace Plugs
             return "Protobuf 2 导出 Java";
         }
 
-        public void DoAction(object data)
+        public void DoAction(List<string> files)
         {
-            List<string> files = (List<string>)data;
             try
             {
                 using (Process process = new Process())

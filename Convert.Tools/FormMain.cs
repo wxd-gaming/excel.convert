@@ -1,6 +1,7 @@
 ﻿using Convert.Tools.Code;
 using Convert.Tools.Excel;
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -70,14 +71,6 @@ namespace Convert.Tools
             }
         }
 
-        private ExcelRead GetExcelRead()
-        {
-            ExcelRead excelRead = new ExcelRead();
-            CheckFiles((path) => excelRead.ReadExcel(path), ".xls", ".xlsx");
-            ShowLog("找到“.xls, .xlsx”文件 数量：" + excelRead.Tables.Count());
-            return excelRead;
-        }
-
         /// <summary>
         /// 获取选择的文件
         /// </summary>
@@ -101,6 +94,7 @@ namespace Convert.Tools
         {
             List<string> files = new List<string>();
             CheckFiles((file) => files.Add(file), extendName);
+            ShowLog("找到“" + string.Join(", ", extendName) + "”文件 数量：" + files.Count());
             return files;
         }
 
@@ -157,34 +151,49 @@ namespace Convert.Tools
 
         private void tsmi_excel_plus_all_Click(object sender, EventArgs e)
         {
-            ExcelRead excelRead = GetExcelRead();
-            foreach (var item in excelRead.Tables)
+            List<string> list = GetFiles(".xls", ".xlsx");
+            foreach (var plug in scriptPool.Enumerable())
             {
-                DataTable dataTable = item.Value;
-                foreach (var plug in scriptPool.Enumerable())
+                if (plug.plugEnum() == PlugEnum.Excel)
                 {
-                    if (plug.plugEnum() == PlugEnum.Excel)
-                    {
-                        plug.DoAction(dataTable);
-                    }
+                    plug.DoAction(list);
                 }
             }
         }
 
         private void tsmi_xml_plug_all_Click(object sender, EventArgs e)
         {
+            List<string> list = GetFiles(".xml");
+            foreach (var plug in scriptPool.Enumerable())
+            {
+                if (plug.plugEnum() == PlugEnum.Xml)
+                {
+                    plug.DoAction(list);
+                }
+            }
+        }
 
+        private void tsmi_protobuf_all_Click(object sender, EventArgs e)
+        {
+            List<string> list = GetFiles(".proto");
+            foreach (var plug in scriptPool.Enumerable())
+            {
+                if (plug.plugEnum() == PlugEnum.Protobuf)
+                {
+                    plug.DoAction(list);
+                }
+            }
         }
 
         private void Excel_Plug_Click(object sender, EventArgs e)
         {
-            ToolStripItem ts = (ToolStripItem)sender;
-            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
-            ExcelRead excelRead = GetExcelRead();
-            foreach (var item in excelRead.Tables)
+            List<string> list = GetFiles(".xls", ".xlsx");
+            foreach (var plug in scriptPool.Enumerable())
             {
-                DataTable dataTable = item.Value;
-                outPutPlugs.DoAction(dataTable);
+                if (plug.plugEnum() == PlugEnum.Excel)
+                {
+                    plug.DoAction(list);
+                }
             }
         }
 
@@ -192,7 +201,8 @@ namespace Convert.Tools
         {
             ToolStripItem ts = (ToolStripItem)sender;
             IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
-
+            List<string> list = GetFiles(".xml");
+            outPutPlugs.DoAction(list);
         }
 
         private void Protobuf_Plug_Click(object sender, EventArgs e)
@@ -245,5 +255,7 @@ namespace Convert.Tools
         {
             this.tb_log.Text = "";
         }
+
+
     }
 }

@@ -2,6 +2,7 @@
 using Convert.Tools.Code;
 using Convert.Tools.Excel;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Plugs
@@ -22,17 +23,19 @@ namespace Plugs
             return "导出 Java Code";
         }
 
-        public void DoAction(object data)
+        public void DoAction(List<string> files)
         {
-            DataTable dataTable = data as DataTable;
-
-            CreateCode_Bean(dataTable);
-            CreateCode_Bean_Exent(dataTable);
-            CreateCode_Bean_Factory(dataTable);
+            List<ExcelDataTable> dataTables = files.AsDataTable();
+            foreach (ExcelDataTable dataTable in dataTables)
+            {
+                CreateCode_Bean(dataTable);
+                CreateCode_Bean_Exent(dataTable);
+                CreateCode_Bean_Factory(dataTable);
+            }
 
         }
 
-        public void CreateCode_Bean(DataTable dataTable)
+        public void CreateCode_Bean(ExcelDataTable dataTable)
         {
             string fileName = outPath + "\\" + package.Replace(".", "\\") + "\\bean\\" + dataTable.CodeName + "Bean.java";
 
@@ -78,7 +81,7 @@ namespace Plugs
             code.WriterFile(fileName);
         }
 
-        public void CreateCode_Bean_Exent(DataTable dataTable)
+        public void CreateCode_Bean_Exent(ExcelDataTable dataTable)
         {
             string fileName = outPath + "\\" + package.Replace(".", "\\") + "\\extend\\" + dataTable.CodeName + "Extend.java";
             if (fileName.ExistsFile())
@@ -115,7 +118,7 @@ namespace Plugs
 
         }
 
-        public void CreateCode_Bean_Factory(DataTable dataTable)
+        public void CreateCode_Bean_Factory(ExcelDataTable dataTable)
         {
             string fileName = outPath + "\\" + package.Replace(".", "\\") + "\\factory\\" + dataTable.CodeName + "Factory.java";
 

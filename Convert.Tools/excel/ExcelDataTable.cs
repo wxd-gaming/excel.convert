@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Convert.Tools.Excel
 {
-    public class DataTable
+    public class ExcelDataTable
     {
-
 
         /// <summary>
         /// 表名
@@ -25,12 +21,12 @@ namespace Convert.Tools.Excel
         /// <summary>
         /// 
         /// </summary>
-        public DataColumn KeyColumn { get; set; }
+        public ExcelDataColumn KeyColumn { get; set; }
 
         /// <summary>
         /// 所有的字段
         /// </summary>
-        public Dictionary<string, DataColumn> Columns = new Dictionary<string, DataColumn>();
+        public Dictionary<string, ExcelDataColumn> Columns = new Dictionary<string, ExcelDataColumn>();
         /// <summary>
         /// 所有行
         /// </summary>

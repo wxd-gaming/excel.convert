@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Convert.Tools.Excel
 {
-    public class DataColumn
+    public class ExcelDataColumn
     {
 
         /// <summary>

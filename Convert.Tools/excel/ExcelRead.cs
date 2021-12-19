@@ -14,10 +14,19 @@ namespace Convert.Tools.Excel
     public class ExcelRead
     {
 
+        public int NameRowNumber = 0;
+        public int TypeRowNumber = 0;
+        public int BelongRowNumber = 0;
+        public int CommentRowNumber = 1;
+        /// <summary>
+        /// 数据读取其实行
+        /// </summary>
+        public int DataStartRowNumber = 2;
+
         /// <summary>
         /// 所有的表
         /// </summary>
-        public Dictionary<string, DataTable> Tables = new Dictionary<string, DataTable>();
+        public Dictionary<string, ExcelDataTable> Tables = new Dictionary<string, ExcelDataTable>();
 
         public void ReadExcel(string excelPath)
         {
@@ -70,10 +79,10 @@ namespace Convert.Tools.Excel
                 return;
             }
 
-            IRow columnRow = sheet.GetRow(0);//字段名字行
-            IRow typeRow = sheet.GetRow(0);//字段类型行
-            IRow belongRow = sheet.GetRow(0);//字段归属
-            IRow commentRow = sheet.GetRow(1);//读取配置说明
+            IRow columnRow = sheet.GetRow(NameRowNumber);//字段名字行
+            IRow typeRow = sheet.GetRow(TypeRowNumber);//字段类型行
+            IRow belongRow = sheet.GetRow(BelongRowNumber);//字段归属
+            IRow commentRow = sheet.GetRow(CommentRowNumber);//读取配置说明
 
             if (columnRow == null) return;
 
@@ -93,10 +102,10 @@ namespace Convert.Tools.Excel
 
             if (!Tables.ContainsKey(sheetName))
             {
-                Tables[sheetName] = new DataTable();
+                Tables[sheetName] = new ExcelDataTable();
             }
 
-            DataTable dataTable = Tables[sheetName];
+            ExcelDataTable dataTable = Tables[sheetName];
             dataTable.Name = sheetName;
             dataTable.CodeName = sheetName.CodeString().FirstUpper();
 
@@ -125,8 +134,8 @@ namespace Convert.Tools.Excel
         /// <param name="commontCell">注解</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        private DataColumn ActionColumn(string filePath, string sheetName,
-            DataTable dataTable,
+        private ExcelDataColumn ActionColumn(string filePath, string sheetName,
+            ExcelDataTable dataTable,
             HashSet<string> columnNames,
             ICell columnCell, ICell typeCell, ICell belongCell, ICell commontCell)
         {
@@ -161,7 +170,7 @@ namespace Convert.Tools.Excel
 
             if (!dataTable.Columns.ContainsKey(columnName))
             {
-                DataColumn dataColumn = new DataColumn();
+                ExcelDataColumn dataColumn = new ExcelDataColumn();
                 dataColumn.Name = columnName;
                 dataColumn.CodeName = columnName.CodeString();
 
@@ -291,21 +300,21 @@ namespace Convert.Tools.Excel
                 return;
 
             }
-            DataTable dataTable = Tables[sheetName];
-            IRow columnRow = sheet.GetRow(0);
+            ExcelDataTable dataTable = Tables[sheetName];
+            IRow columnRow = sheet.GetRow(NameRowNumber);
 
             if (columnRow == null)
             {
                 return;
             }
 
-            IRow typeRow = sheet.GetRow(0);
-            IRow belongRow = sheet.GetRow(0);
-            IRow commentRow = sheet.GetRow(1);
+            IRow typeRow = sheet.GetRow(TypeRowNumber);
+            IRow belongRow = sheet.GetRow(BelongRowNumber);
+            IRow commentRow = sheet.GetRow(CommentRowNumber);
 
             if (sheet.LastRowNum > 2)
             {
-                for (int i = 2; i <= sheet.LastRowNum; i++)
+                for (int i = DataStartRowNumber; i <= sheet.LastRowNum; i++)
                 {
                     IRow rowData = sheet.GetRow(i); //读取当前行数据
                     if (rowData == null)
@@ -335,7 +344,7 @@ namespace Convert.Tools.Excel
 
                         if (columnCell != null)
                         {
-                            DataColumn dataColumn = ActionColumn(excelPath, sheetName, dataTable, null, columnCell, typeCell, belongCell, commontCell);
+                            ExcelDataColumn dataColumn = ActionColumn(excelPath, sheetName, dataTable, null, columnCell, typeCell, belongCell, commontCell);
                             if (dataColumn != null)
                             {
                                 keyValuePairs[dataColumn.Name] = CellValue(dataColumn.ValueType, dataCell);

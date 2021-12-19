@@ -22,9 +22,8 @@ namespace Plugs
             return "Protobuf 导出 C#";
         }
 
-        public void DoAction(object data)
+        public void DoAction(List<string> files)
         {
-            List<string> files = (List<string>)data;
             string basepath = AppDomain.CurrentDomain.BaseDirectory + "Protobuf\\";
             //string basepath = AppDomain.CurrentDomain.BaseDirectory;
 
