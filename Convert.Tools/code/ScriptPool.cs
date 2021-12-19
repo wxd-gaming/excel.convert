@@ -15,7 +15,7 @@ using System.Reflection;
  * @phone 13882122019
  * 
  */
-namespace Net.Sz.Framework.Script
+namespace Convert.Tools.Code
 {
     /// <summary>
     /// 加载脚本文件

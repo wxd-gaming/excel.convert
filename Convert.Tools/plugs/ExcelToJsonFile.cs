@@ -1,14 +1,15 @@
-﻿using Convert.Tools.code;
-using Convert.Tools.excel;
+﻿using Convert.Tools;
+using Convert.Tools.Code;
+using Convert.Tools.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Convert.Tools.Plugs
+namespace Plugs
 {
-    public class OutPut2JsonFile : IOutPutPlugs
+    public class OutPutToJsonFile : IOutPutPlugs
     {
 
         string outPath = "d:\\out\\json";
@@ -20,9 +21,9 @@ namespace Convert.Tools.Plugs
 
         public string PlugsName()
         {
-            return "Out Json File";
+            return "导出 Json File";
         }
-        public void OutPut(object data)
+        public void DoAction(object data)
         {
             DataTable dataTable = data as DataTable;
             string fileName = outPath + "\\" + dataTable.Name + ".json";

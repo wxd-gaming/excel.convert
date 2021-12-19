@@ -110,16 +110,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="code\IOutPutPlugs.cs" />
-    <Compile Include="code\PlugEnum.cs" />
-    <Compile Include="excel\DataColumn.cs" />
-    <Compile Include="excel\DataTable.cs" />
-    <Compile Include="GlobalConfig.cs" />
-    <Compile Include="plugs\OutPut2JavaCode.cs">
+    <Compile Include="Code\IOutPutPlugs.cs" />
+    <Compile Include="Code\PlugEnum.cs" />
+    <Compile Include="Plugs\ExcelToMysql.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="excel\ExcelRead.cs" />
-    <Compile Include="excel\sql\ExcelRead2Mysql.cs" />
+    <Compile Include="Plugs\ProtobufToCSharp.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Plugs\Protobuf3ToJava.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Plugs\Protobuf2ToJava.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Excel\DataColumn.cs" />
+    <Compile Include="Excel\DataTable.cs" />
+    <Compile Include="GlobalConfig.cs" />
+    <Compile Include="Plugs\ExcelToJavaCode.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Excel\ExcelRead.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,9 +141,9 @@
     <Compile Include="Objects.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="excel\sql\DbHelper.cs" />
-    <Compile Include="code\ScriptPool.cs" />
-    <Compile Include="plugs\OutPut2JsonFile.cs">
+    <Compile Include="Sql\DbHelper.cs" />
+    <Compile Include="Code\ScriptPool.cs" />
+    <Compile Include="Plugs\ExcelToJsonFile.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <EmbeddedResource Include="FormMain.resx">
@@ -158,11 +169,65 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Protobuf\protobuf.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protogen.exe.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Protobuf\common.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\csharp.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\IDS.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\Licence.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protobuf-net.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protobuf-net.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protobuf-net.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protoc-license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protoc.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protoc3.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protogen.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\protogen.pdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\user.proto.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\vb.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Protobuf\xml.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="xx.ico" />
   </ItemGroup>
   <ItemGroup />

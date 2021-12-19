@@ -1,14 +1,12 @@
-﻿using Convert.Tools.code;
-using Convert.Tools.excel;
+﻿using Convert.Tools;
+using Convert.Tools.Code;
+using Convert.Tools.Excel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Convert.Tools.Plugs
+namespace Plugs
 {
-    public class OutPut2JavaCode : IOutPutPlugs
+    public class OutPutToJavaCode : IOutPutPlugs
     {
 
         string outPath = "d:\\out";
@@ -21,10 +19,10 @@ namespace Convert.Tools.Plugs
 
         public string PlugsName()
         {
-            return "Out Java Code";
+            return "导出 Java Code";
         }
 
-        public void OutPut(object data)
+        public void DoAction(object data)
         {
             DataTable dataTable = data as DataTable;
 

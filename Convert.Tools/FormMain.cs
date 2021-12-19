@@ -1,14 +1,9 @@
-﻿using Convert.Tools.excel;
-using Net.Sz.Framework.Script;
+﻿using Convert.Tools.Code;
+using Convert.Tools.Excel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Convert.Tools
@@ -75,16 +70,11 @@ namespace Convert.Tools
             }
         }
 
-        private ExcelRead GetExcelRead(params string[] extendNames)
+        private ExcelRead GetExcelRead()
         {
             ExcelRead excelRead = new ExcelRead();
-            GetCheckFiles(
-                (path) =>
-                {
-                    excelRead.ReadExcel(path);
-                },
-                extendNames);
-            ShowLog("找到“" + string.Join(", ", extendNames) + "”文件 数量：" + excelRead.Tables.Count());
+            CheckFiles((path) => excelRead.ReadExcel(path), ".xls", ".xlsx");
+            ShowLog("找到“.xls, .xlsx”文件 数量：" + excelRead.Tables.Count());
             return excelRead;
         }
 
@@ -92,7 +82,7 @@ namespace Convert.Tools
         /// 获取选择的文件
         /// </summary>
         /// <param name="extendName">文件扩展名</param>
-        private void GetCheckFiles(Action<string> call, params string[] extendName)
+        private void CheckFiles(Action<string> call, params string[] extendName)
         {
             var temps = (this.lb_files.Tag as List<ItemFileInfo>);
             foreach (ItemFileInfo item in temps)
@@ -105,7 +95,13 @@ namespace Convert.Tools
                     }
                 }
             }
+        }
 
+        private List<string> GetFiles(params string[] extendName)
+        {
+            List<string> files = new List<string>();
+            CheckFiles((file) => files.Add(file), extendName);
+            return files;
         }
 
         private void tsmi_check_file_Click(object sender, EventArgs e)
@@ -120,7 +116,7 @@ namespace Convert.Tools
         {
             ShowLog = (str) =>
             {
-                this.tb_log.Invoke(new Action(() =>
+                this.tb_log.BeginInvoke(new Action(() =>
                 {
                     this.tb_log.Text = str + "\r\n" + this.tb_log.Text;
                 }));
@@ -129,9 +125,10 @@ namespace Convert.Tools
             this.lb_files.Tag = new List<ItemFileInfo>();
             ShowLog.Invoke("欢迎使用 無心道 软件");
             scriptPool = new ScriptPool();
-            scriptPool.LoadCSharpFile("plugs");
-            ToolStripMenuItem tsmi_excel_plugs = (ToolStripMenuItem)this.ms_main.Items["tsmi_excel_plugs"];
-            ToolStripMenuItem tsmi_xml_plugs = (ToolStripMenuItem)this.ms_main.Items["tsmi_excel_plugs"];
+            scriptPool.LoadCSharpFile("Plugs");
+            ToolStripMenuItem tsmi_plugs_excel = (ToolStripMenuItem)this.ms_main.Items["tsmi_plugs_excel"];
+            ToolStripMenuItem tsmi_plugs_xml = (ToolStripMenuItem)this.ms_main.Items["tsmi_plugs_xml"];
+            ToolStripMenuItem tsmi_plugs_protobuf = (ToolStripMenuItem)this.ms_main.Items["tsmi_plugs_protobuf"];
             foreach (var item in scriptPool.Enumerable())
             {
                 string plugName = item.PlugsName();
@@ -140,48 +137,70 @@ namespace Convert.Tools
                 ts.Name = plugName;
                 ts.Text = plugName;
                 ts.Tag = item;
-                ts.Click += new EventHandler(Plug_Click);
                 switch (item.plugEnum())
                 {
-                    case code.PlugEnum.Xml:
-                        tsmi_excel_plugs.DropDownItems.Add(ts);
+                    case PlugEnum.Xml:
+                        ts.Click += new EventHandler(Xml_Plug_Click);
+                        tsmi_plugs_xml.DropDownItems.Add(ts);
                         break;
-                    case code.PlugEnum.Excel:
-                        tsmi_xml_plugs.DropDownItems.Add(ts);
+                    case PlugEnum.Excel:
+                        ts.Click += new EventHandler(Excel_Plug_Click);
+                        tsmi_plugs_excel.DropDownItems.Add(ts);
                         break;
-                }                
-            }
-        }
-
-        private void tsmi_plus_all_Click(object sender, EventArgs e)
-        {
-            ToolStripItem ts = (ToolStripItem)sender;
-            string[] vs = ts.Tag.ToString().Split(',');
-            ExcelRead excelRead = GetExcelRead(vs);
-            foreach (var plug in scriptPool.Enumerable())
-            {
-                foreach (var item in excelRead.Tables)
-                {
-                    plug.OutPut(item.Value);
+                    case PlugEnum.Protobuf:
+                        ts.Click += new EventHandler(Protobuf_Plug_Click);
+                        tsmi_plugs_protobuf.DropDownItems.Add(ts);
+                        break;
                 }
             }
         }
 
-        private void Plug_Click(object sender, EventArgs e)
+        private void tsmi_excel_plus_all_Click(object sender, EventArgs e)
         {
-            ToolStripItem ts = (ToolStripItem)sender;
-            ExcelRead excelRead = GetExcelRead(".xls", ".xlsx");
-            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+            ExcelRead excelRead = GetExcelRead();
             foreach (var item in excelRead.Tables)
             {
-                excel.DataTable dataTable = item.Value;
-                outPutPlugs.OutPut(dataTable);
+                DataTable dataTable = item.Value;
+                foreach (var plug in scriptPool.Enumerable())
+                {
+                    if (plug.plugEnum() == PlugEnum.Excel)
+                    {
+                        plug.DoAction(dataTable);
+                    }
+                }
             }
         }
 
-        private void tsmi_clear_log_Click(object sender, EventArgs e)
+        private void tsmi_xml_plug_all_Click(object sender, EventArgs e)
         {
-            this.tb_log.Text = "";
+
+        }
+
+        private void Excel_Plug_Click(object sender, EventArgs e)
+        {
+            ToolStripItem ts = (ToolStripItem)sender;
+            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+            ExcelRead excelRead = GetExcelRead();
+            foreach (var item in excelRead.Tables)
+            {
+                DataTable dataTable = item.Value;
+                outPutPlugs.DoAction(dataTable);
+            }
+        }
+
+        private void Xml_Plug_Click(object sender, EventArgs e)
+        {
+            ToolStripItem ts = (ToolStripItem)sender;
+            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+
+        }
+
+        private void Protobuf_Plug_Click(object sender, EventArgs e)
+        {
+            ToolStripItem ts = (ToolStripItem)sender;
+            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+            List<string> list = GetFiles(".proto");
+            outPutPlugs.DoAction(list);
         }
 
         /// <summary>
@@ -194,9 +213,7 @@ namespace Convert.Tools
             this.BeginInvoke(new Action(() =>
             {
                 if (open_dir.ShowDialog() == DialogResult.OK)
-                {
                     FindFiles(open_dir.SelectedPath);
-                }
             }));
         }
 
@@ -224,6 +241,9 @@ namespace Convert.Tools
             temps.Clear();
         }
 
-
+        private void tsmi_clear_show_log_Click(object sender, EventArgs e)
+        {
+            this.tb_log.Text = "";
+        }
     }
 }

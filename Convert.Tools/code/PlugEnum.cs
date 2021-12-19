@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Convert.Tools.code
+﻿
+namespace Convert.Tools.Code
 {
     public enum PlugEnum
     {
         Xml,
-        Excel
+        Excel,
+        Protobuf
     }
 }
