@@ -1,4 +1,4 @@
-﻿namespace Excel.Convert
+﻿namespace Convert.Tools
 {
     partial class FormMain
     {
@@ -40,7 +40,10 @@
             this.tsmi_clear_all = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmi_exit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmi_plugs = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_excel_plugs = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmi_excel_plus_all = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_xml_plugs = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_action_protobuf = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmi_help = new System.Windows.Forms.ToolStripMenuItem();
             this.tstb_help = new System.Windows.Forms.ToolStripTextBox();
@@ -49,8 +52,7 @@
             this.open_file = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tb_log = new System.Windows.Forms.TextBox();
-            this.tsmi_plus_all = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmi_xml_plug_all = new System.Windows.Forms.ToolStripMenuItem();
             this.gb_files.SuspendLayout();
             this.ms_main.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -82,12 +84,14 @@
             // 
             this.ms_main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmi_action_file,
-            this.tsmi_plugs,
+            this.tsmi_excel_plugs,
+            this.tsmi_xml_plugs,
             this.tsmi_action_protobuf,
             this.tsmi_help,
             this.tsmi_clear_log});
             this.ms_main.Location = new System.Drawing.Point(0, 0);
             this.ms_main.Name = "ms_main";
+            this.ms_main.ShowItemToolTips = true;
             this.ms_main.Size = new System.Drawing.Size(878, 25);
             this.ms_main.TabIndex = 1;
             this.ms_main.Text = "ms_main";
@@ -150,20 +154,44 @@
             this.tsmi_exit.Size = new System.Drawing.Size(148, 22);
             this.tsmi_exit.Text = "退出";
             // 
-            // tsmi_plugs
+            // tsmi_excel_plugs
             // 
-            this.tsmi_plugs.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmi_plus_all,
+            this.tsmi_excel_plugs.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_excel_plus_all,
             this.toolStripSeparator3});
-            this.tsmi_plugs.Name = "tsmi_plugs";
-            this.tsmi_plugs.Size = new System.Drawing.Size(85, 21);
-            this.tsmi_plugs.Text = "Excel-Plugs";
+            this.tsmi_excel_plugs.Name = "tsmi_excel_plugs";
+            this.tsmi_excel_plugs.Size = new System.Drawing.Size(85, 21);
+            this.tsmi_excel_plugs.Text = "Excel-Plugs";
+            this.tsmi_excel_plugs.ToolTipText = "excel(.xls, .xlsx)文件处理";
+            // 
+            // tsmi_excel_plus_all
+            // 
+            this.tsmi_excel_plus_all.Name = "tsmi_excel_plus_all";
+            this.tsmi_excel_plus_all.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_excel_plus_all.Tag = ".xls,.xlsx";
+            this.tsmi_excel_plus_all.Text = "执行全部";
+            this.tsmi_excel_plus_all.Click += new System.EventHandler(this.tsmi_plus_all_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            // 
+            // tsmi_xml_plugs
+            // 
+            this.tsmi_xml_plugs.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmi_xml_plug_all});
+            this.tsmi_xml_plugs.Name = "tsmi_xml_plugs";
+            this.tsmi_xml_plugs.Size = new System.Drawing.Size(78, 21);
+            this.tsmi_xml_plugs.Text = "Xml-Plugs";
+            this.tsmi_xml_plugs.ToolTipText = "对文件(.xml)处理插件";
             // 
             // tsmi_action_protobuf
             // 
             this.tsmi_action_protobuf.Name = "tsmi_action_protobuf";
             this.tsmi_action_protobuf.Size = new System.Drawing.Size(72, 21);
             this.tsmi_action_protobuf.Text = "protobuf";
+            this.tsmi_action_protobuf.ToolTipText = "对protobuff文件处理";
             // 
             // tsmi_help
             // 
@@ -215,17 +243,13 @@
             this.tb_log.TabIndex = 0;
             this.tb_log.WordWrap = false;
             // 
-            // tsmi_plus_all
+            // tsmi_xml_plug_all
             // 
-            this.tsmi_plus_all.Name = "tsmi_plus_all";
-            this.tsmi_plus_all.Size = new System.Drawing.Size(180, 22);
-            this.tsmi_plus_all.Text = "执行全部";
-            this.tsmi_plus_all.Click += new System.EventHandler(this.tsmi_plus_all_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.tsmi_xml_plug_all.Name = "tsmi_xml_plug_all";
+            this.tsmi_xml_plug_all.Size = new System.Drawing.Size(180, 22);
+            this.tsmi_xml_plug_all.Tag = ".xml";
+            this.tsmi_xml_plug_all.Text = "执行全部";
+            this.tsmi_xml_plug_all.Click += new System.EventHandler(this.tsmi_plus_all_Click);
             // 
             // FormMain
             // 
@@ -271,9 +295,11 @@
         private System.Windows.Forms.ToolStripMenuItem tsmi_clear_file;
         private System.Windows.Forms.ToolStripMenuItem tsmi_clear_all;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_plugs;
-        private System.Windows.Forms.ToolStripMenuItem tsmi_plus_all;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_excel_plugs;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_excel_plus_all;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_xml_plugs;
+        private System.Windows.Forms.ToolStripMenuItem tsmi_xml_plug_all;
     }
 }
 

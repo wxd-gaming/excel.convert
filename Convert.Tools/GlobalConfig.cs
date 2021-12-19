@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Excel.Convert.excel.sql
+namespace Convert.Tools
 {
-    public class ExcelRead2Mysql
+    public class GlobalConfig
     {
 
     }

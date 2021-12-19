@@ -1,11 +1,12 @@
-﻿using Excel.Convert.excel;
+﻿using Convert.Tools.code;
+using Convert.Tools.excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Excel.Convert.Plugs
+namespace Convert.Tools.Plugs
 {
     public class OutPut2JavaCode : IOutPutPlugs
     {
@@ -13,14 +14,20 @@ namespace Excel.Convert.Plugs
         string outPath = "d:\\out";
         string package = "com.tb.po";
 
+        public PlugEnum plugEnum()
+        {
+            return PlugEnum.Excel;
+        }
 
         public string PlugsName()
         {
             return "Out Java Code";
         }
 
-        public void OutPut(DataTable dataTable)
+        public void OutPut(object data)
         {
+            DataTable dataTable = data as DataTable;
+
             CreateCode_Bean(dataTable);
             CreateCode_Bean_Exent(dataTable);
             CreateCode_Bean_Factory(dataTable);

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Excel.Convert")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Convert.Tools")]
+[assembly: AssemblyDescription("工具转换器")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Excel.Convert")]
+[assembly: AssemblyCompany("無心道")]
+[assembly: AssemblyProduct("無心道")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BAC714D7-7494-4947-B4F9-5AD2EB6E0A23}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Excel.Convert</RootNamespace>
-    <AssemblyName>Excel.Convert</AssemblyName>
+    <RootNamespace>Convert.Tools</RootNamespace>
+    <AssemblyName>Convert.Tools</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="code\IOutPutPlugs.cs" />
+    <Compile Include="code\PlugEnum.cs" />
     <Compile Include="excel\DataColumn.cs" />
     <Compile Include="excel\DataTable.cs" />
     <Compile Include="GlobalConfig.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

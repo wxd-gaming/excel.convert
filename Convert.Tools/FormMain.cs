@@ -1,4 +1,4 @@
-﻿using Excel.Convert.excel;
+﻿using Convert.Tools.excel;
 using Net.Sz.Framework.Script;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Excel.Convert
+namespace Convert.Tools
 {
     public partial class FormMain : Form
     {
@@ -84,6 +84,7 @@ namespace Excel.Convert
                     excelRead.ReadExcel(path);
                 },
                 extendNames);
+            ShowLog("找到“" + string.Join(", ", extendNames) + "”文件 数量：" + excelRead.Tables.Count());
             return excelRead;
         }
 
@@ -129,7 +130,8 @@ namespace Excel.Convert
             ShowLog.Invoke("欢迎使用 無心道 软件");
             scriptPool = new ScriptPool();
             scriptPool.LoadCSharpFile("plugs");
-            ToolStripMenuItem toolStripItem = (ToolStripMenuItem)this.ms_main.Items["tsmi_plugs"];
+            ToolStripMenuItem tsmi_excel_plugs = (ToolStripMenuItem)this.ms_main.Items["tsmi_excel_plugs"];
+            ToolStripMenuItem tsmi_xml_plugs = (ToolStripMenuItem)this.ms_main.Items["tsmi_excel_plugs"];
             foreach (var item in scriptPool.Enumerable())
             {
                 string plugName = item.PlugsName();
@@ -137,14 +139,25 @@ namespace Excel.Convert
                 ToolStripItem ts = new ToolStripMenuItem();
                 ts.Name = plugName;
                 ts.Text = plugName;
+                ts.Tag = item;
                 ts.Click += new EventHandler(Plug_Click);
-                toolStripItem.DropDownItems.Add(ts);
+                switch (item.plugEnum())
+                {
+                    case code.PlugEnum.Xml:
+                        tsmi_excel_plugs.DropDownItems.Add(ts);
+                        break;
+                    case code.PlugEnum.Excel:
+                        tsmi_xml_plugs.DropDownItems.Add(ts);
+                        break;
+                }                
             }
         }
 
         private void tsmi_plus_all_Click(object sender, EventArgs e)
         {
-            ExcelRead excelRead = GetExcelRead(".xls", ".xlsx");
+            ToolStripItem ts = (ToolStripItem)sender;
+            string[] vs = ts.Tag.ToString().Split(',');
+            ExcelRead excelRead = GetExcelRead(vs);
             foreach (var plug in scriptPool.Enumerable())
             {
                 foreach (var item in excelRead.Tables)
@@ -158,7 +171,7 @@ namespace Excel.Convert
         {
             ToolStripItem ts = (ToolStripItem)sender;
             ExcelRead excelRead = GetExcelRead(".xls", ".xlsx");
-            IOutPutPlugs outPutPlugs = scriptPool.GetPlugs(ts.Name);
+            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
             foreach (var item in excelRead.Tables)
             {
                 excel.DataTable dataTable = item.Value;

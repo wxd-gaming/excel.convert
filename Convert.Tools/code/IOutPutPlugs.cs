@@ -1,23 +1,25 @@
-﻿using Excel.Convert.excel;
+﻿using Convert.Tools.code;
+using Convert.Tools.excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Excel.Convert
+namespace Convert.Tools
 {
     public interface IOutPutPlugs
     {
 
+        PlugEnum plugEnum();
+
         string PlugsName();
 
         /// <summary>
-        /// 创建 映射 entity
         /// </summary>
-        /// <param name="dataTable"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        void OutPut(DataTable dataTable);
+        void OutPut(object data);
 
     }
 }
