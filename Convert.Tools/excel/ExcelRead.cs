@@ -13,7 +13,7 @@ namespace Convert.Tools.Excel
 {
     public class ExcelRead
     {
-
+        public bool ReadAllSheet = true;
         public int NameRowNumber = 0;
         public int TypeRowNumber = 0;
         public int BelongRowNumber = 0;
@@ -53,7 +53,9 @@ namespace Convert.Tools.Excel
                     }
                     if (wk.NumberOfSheets > 0)
                     {
-                        for (int i = 0; i < wk.NumberOfSheets; i++)
+                        int forCount = wk.NumberOfSheets;
+                        if (!ReadAllSheet) forCount = 1;
+                        for (int i = 0; i < forCount; i++)
                         {
                             ISheet sheet = wk.GetSheetAt(i);
                             ActionColumn(excelPath, sheet);

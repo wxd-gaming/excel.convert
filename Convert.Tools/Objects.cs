@@ -11,6 +11,46 @@ namespace Convert.Tools
     public static class Objects
     {
 
+        public static List<ExcelDataTable> AsDataTable(this List<string> files)
+        {
+            return AsDataTable(files, 0, 0, 0, 1, 2, false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="files"></param>
+        /// <param name="nameRowNumber"></param>
+        /// <param name="typeRowNumber"></param>
+        /// <param name="belongRowNumber">归属行号</param>
+        /// <param name="commentRowNumber">备注行号</param>
+        /// <param name="dataStartComment">数据起始行号</param>
+        /// <returns></returns>
+        public static List<ExcelDataTable> AsDataTable(this List<string> files,
+            int nameRowNumber, int typeRowNumber,
+            int belongRowNumber, int commentRowNumber,
+            int dataStartComment, bool readAllSheet
+            )
+        {
+            ExcelRead excelRead = new ExcelRead();
+            excelRead.NameRowNumber = nameRowNumber;
+            excelRead.TypeRowNumber = typeRowNumber;
+            excelRead.BelongRowNumber = belongRowNumber;
+            excelRead.CommentRowNumber = commentRowNumber;
+            excelRead.DataStartRowNumber = dataStartComment;
+            excelRead.ReadAllSheet = readAllSheet;
+
+            foreach (string file in files)
+            {
+                excelRead.ReadExcel(file);
+            }
+            List<ExcelDataTable> list = new List<ExcelDataTable>();
+            foreach (var item in excelRead.Tables.Values)
+            {
+                list.Add(item);
+            }
+            return list;
+        }
 
         /// <summary>
         /// 

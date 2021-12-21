@@ -1,7 +1,6 @@
 ﻿using Convert.Tools;
 using Convert.Tools.Code;
 using Convert.Tools.Excel;
-using Convert.Tools.Sql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -56,6 +55,15 @@ namespace Plugs
                 try
                 {
                     ddl.ExecuteQuery(dataTable.Name, DbIp, DbPort, DbName, DbUser, DbPwd);
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException(dataTable.Name + ", " + e.Message);
+                }
+                string data = dataTable.AsInsertSql();
+                try
+                {
+                    data.ExecuteQuery(dataTable.Name, DbIp, DbPort, DbName, DbUser, DbPwd);
                 }
                 catch (Exception e)
                 {
