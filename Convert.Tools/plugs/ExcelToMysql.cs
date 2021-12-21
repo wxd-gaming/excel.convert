@@ -2,14 +2,15 @@
 using Convert.Tools.Code;
 using Convert.Tools.Excel;
 using Convert.Tools.Sql;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Text;
 
 namespace Plugs
 {
-    public class OutPutToMysql : IOutPutPlugs
+    public class ExcelToMysql : IOutPutPlugs
     {
         /// <summary>
         /// 数据库连接
@@ -43,7 +44,7 @@ namespace Plugs
 
         public string PlugsName()
         {
-            return "导入 Mysql";
+            return "导入 Mysql 数据库";
         }
 
         public void DoAction(List<string> files)
@@ -51,12 +52,15 @@ namespace Plugs
             List<ExcelDataTable> dataTables = files.AsDataTable();
             foreach (ExcelDataTable dataTable in dataTables)
             {
-
-                using (MySqlConnection connection = DbHelper.GetConnection(DbIp, DbPort, DbName, DbUser, DbPwd))
+                string ddl = dataTable.AsDdl();
+                try
                 {
-
+                    ddl.ExecuteQuery(dataTable.Name, DbIp, DbPort, DbName, DbUser, DbPwd);
                 }
-
+                catch (Exception e)
+                {
+                    throw new RuntimeException(dataTable.Name + ", " + e.Message);
+                }
             }
         }
 

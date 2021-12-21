@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Plugs
 {
-    public class OutPutToJavaCode : IOutPutPlugs
+    public class ExcelToJavaCode : IOutPutPlugs
     {
 
         string outPath = "d:\\out";
@@ -29,8 +29,8 @@ namespace Plugs
             foreach (ExcelDataTable dataTable in dataTables)
             {
                 CreateCode_Bean(dataTable);
-                CreateCode_Bean_Exent(dataTable);
-                CreateCode_Bean_Factory(dataTable);
+                CreateCode_Exent(dataTable);
+                CreateCode_Factory(dataTable);
             }
 
         }
@@ -81,7 +81,7 @@ namespace Plugs
             code.WriterFile(fileName);
         }
 
-        public void CreateCode_Bean_Exent(ExcelDataTable dataTable)
+        public void CreateCode_Exent(ExcelDataTable dataTable)
         {
             string fileName = outPath + "\\" + package.Replace(".", "\\") + "\\extend\\" + dataTable.CodeName + "Extend.java";
             if (fileName.ExistsFile())
@@ -108,7 +108,7 @@ namespace Plugs
             append.Append("@Setter").AppendLine();
             append.Append("@Accessors(chain = true)").AppendLine();
             append.Append("@DbTable(name = \"").Append(dataTable.Name).Append("\")").AppendLine();
-            append.Append("public abstract class " + dataTable.CodeName + "Extend extends ").Append(dataTable.CodeName).Append("Bean {").AppendLine();
+            append.Append("public class " + dataTable.CodeName + "Extend extends ").Append(dataTable.CodeName).Append("Bean {").AppendLine();
             append.AppendLine();
             append.AppendLine();
             append.Append("}").AppendLine();
@@ -118,7 +118,7 @@ namespace Plugs
 
         }
 
-        public void CreateCode_Bean_Factory(ExcelDataTable dataTable)
+        public void CreateCode_Factory(ExcelDataTable dataTable)
         {
             string fileName = outPath + "\\" + package.Replace(".", "\\") + "\\factory\\" + dataTable.CodeName + "Factory.java";
 
@@ -146,7 +146,7 @@ namespace Plugs
             append.Append("@Setter").AppendLine();
             append.Append("@Accessors(chain = true)").AppendLine();
             append.Append("@DbTable(name = \"").Append(dataTable.Name).Append("\")").AppendLine();
-            append.Append("public abstract class " + dataTable.CodeName + "Factory ").Append(" {").AppendLine();
+            append.Append("public class " + dataTable.CodeName + "Factory ").Append(" {").AppendLine();
             append.AppendLine();
             append.AppendLine();
             append.Append("}").AppendLine();

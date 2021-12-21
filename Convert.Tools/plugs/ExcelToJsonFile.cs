@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Plugs
 {
-    public class OutPutToJsonFile : IOutPutPlugs
+    public class ExcelToJsonFile : IOutPutPlugs
     {
 
         string outPath = "d:\\out\\json";

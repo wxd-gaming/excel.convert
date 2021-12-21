@@ -165,7 +165,7 @@ namespace Convert.Tools.Excel
 
             if (columnNames != null && !columnNames.Add(columnName))
             {
-                throw new Exception("文件：" + filePath + " 配置sheet " + sheetName + " 存在相同的字段 " + columnName);
+                throw new RuntimeException("文件：" + filePath + " 配置sheet " + sheetName + " 存在相同的字段 " + columnName);
             }
 
             if (!dataTable.Columns.ContainsKey(columnName))
@@ -276,6 +276,11 @@ namespace Convert.Tools.Excel
                         dataColumn.SqlType = "longtext";
                     }
                 }
+                else
+                {
+                    dataColumn.ValueType = "int";
+                    dataColumn.SqlType = "int";
+                }
 
                 object noiteValue = CellValue(commontCell);
                 dataColumn.Comment = noiteValue == null ? "" : noiteValue.ToString();
@@ -283,7 +288,21 @@ namespace Convert.Tools.Excel
                 {
                     dataColumn.Comment = "";
                 }
+                if ("id".Equals(dataColumn.Name, StringComparison.OrdinalIgnoreCase)
+                    || vtype.IndexOf("=p") >= 0)
+                {
+                    dataColumn.Key = true;
+                }
+                if (dataColumn.Key)
+                {
+                    if (dataTable.KeyColumn != null)
+                    {
+                        throw new RuntimeException("存在重复 主键字段 " + dataColumn.Name);
+                    }
+                    dataTable.KeyColumn = dataColumn;
+                }
                 dataTable.Columns[columnName] = dataColumn;
+
             }
             return dataTable.Columns[columnName];
         }

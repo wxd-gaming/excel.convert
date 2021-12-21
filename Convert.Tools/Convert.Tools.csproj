@@ -111,6 +111,9 @@
   <ItemGroup>
     <Compile Include="Code\IOutPutPlugs.cs" />
     <Compile Include="Code\PlugEnum.cs" />
+    <Compile Include="Plugs\ExcelToMysqlFile.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Plugs\ExcelToMysql.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
@@ -140,11 +143,13 @@
     <Compile Include="Objects.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuntimeException.cs" />
     <Compile Include="Sql\DbHelper.cs" />
     <Compile Include="Code\ScriptPool.cs" />
     <Compile Include="Plugs\ExcelToJsonFile.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Sql\SqlExtend.cs" />
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>

@@ -94,6 +94,10 @@ namespace Convert.Tools
         {
             List<string> files = new List<string>();
             CheckFiles((file) => files.Add(file), extendName);
+            if (files.Count() == 0)
+            {
+                throw new RuntimeException("查找文件失败找到“" + string.Join(", ", extendName) + "”文件");
+            }
             ShowLog("找到“" + string.Join(", ", extendName) + "”文件 数量：" + files.Count());
             return files;
         }
@@ -188,28 +192,24 @@ namespace Convert.Tools
         private void Excel_Plug_Click(object sender, EventArgs e)
         {
             List<string> list = GetFiles(".xls", ".xlsx");
-            foreach (var plug in scriptPool.Enumerable())
-            {
-                if (plug.plugEnum() == PlugEnum.Excel)
-                {
-                    plug.DoAction(list);
-                }
-            }
+            ToolStripItem ts = (ToolStripItem)sender;
+            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+            outPutPlugs.DoAction(list);
         }
 
         private void Xml_Plug_Click(object sender, EventArgs e)
         {
+            List<string> list = GetFiles(".xml");
             ToolStripItem ts = (ToolStripItem)sender;
             IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
-            List<string> list = GetFiles(".xml");
             outPutPlugs.DoAction(list);
         }
 
         private void Protobuf_Plug_Click(object sender, EventArgs e)
         {
+            List<string> list = GetFiles(".proto");
             ToolStripItem ts = (ToolStripItem)sender;
             IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
-            List<string> list = GetFiles(".proto");
             outPutPlugs.DoAction(list);
         }
 
