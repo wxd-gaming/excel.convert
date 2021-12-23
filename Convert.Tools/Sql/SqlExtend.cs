@@ -11,7 +11,6 @@ public static class SqlExtend
     public static string AsDdl(this ExcelDataTable dataTable)
     {
         StringBuilder builder = new StringBuilder();
-        AsDdl(dataTable, builder);
         return builder.ToString();
     }
 
@@ -19,9 +18,8 @@ public static class SqlExtend
     {
         builder.AppendLine("drop table if exists " + dataTable.Name + ";");
         builder.AppendLine("CREATE TABLE " + dataTable.Name + "(");
-        foreach (var item in dataTable.Columns)
+        foreach (var column in dataTable.Columns.Values)
         {
-            ExcelDataColumn column = item.Value;
             builder.Append(column.Name).Append(" ");
             builder.Append(column.SqlType);
             if (column.Key)
@@ -46,10 +44,9 @@ public static class SqlExtend
     {
         sql.Append("Replace Into `" + dataTable.Name + "` (");
         bool appendDH = false;
-        foreach (var item in dataTable.Columns)
+        foreach (var column in dataTable.Columns.Values)
         {
             if (appendDH) sql.Append(", ");
-            ExcelDataColumn column = item.Value;
             sql.Append("`").Append(column.Name).Append("`");
             appendDH = true;
         }
@@ -67,7 +64,7 @@ public static class SqlExtend
                 if (appendDH) sql.Append(", ");
                 if ("string".Equals(column.ValueType))
                 {
-                    sql.Append("`").Append(row[column.Name]).Append("`");
+                    sql.Append("'").Append(row[column.Name]).Append("'");
                 }
                 else
                 {

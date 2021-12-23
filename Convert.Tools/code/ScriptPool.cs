@@ -170,7 +170,7 @@ namespace Convert.Tools.Code
                             FormMain.ShowLog("重复插件命名：" + plug.PlugsName() + ", 文件：" + itemType.FullName);
                         }
                         ScriptInstances[plug.PlugsName()] = plug;
-                        FormMain.ShowLog("加载插件：" + itemType.FullName);
+                        FormMain.ShowLog("加载插件：" + plug.PlugsName() + " -> " + itemType.FullName);
                     }
                     else
                     {

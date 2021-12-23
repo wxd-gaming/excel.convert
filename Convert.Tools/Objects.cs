@@ -13,7 +13,12 @@ namespace Convert.Tools
 
         public static List<ExcelDataTable> AsDataTable(this List<string> files)
         {
-            return AsDataTable(files, 0, 0, 0, 1, 2, false);
+            return AsDataTable(files, "all");
+        }
+
+        public static List<ExcelDataTable> AsDataTable(this List<string> files, string checkBelong)
+        {
+            return AsDataTable(files, checkBelong, 0, 0, 0, 1, 2, false);
         }
 
         /// <summary>
@@ -26,7 +31,7 @@ namespace Convert.Tools
         /// <param name="commentRowNumber">备注行号</param>
         /// <param name="dataStartComment">数据起始行号</param>
         /// <returns></returns>
-        public static List<ExcelDataTable> AsDataTable(this List<string> files,
+        public static List<ExcelDataTable> AsDataTable(this List<string> files, string checkBelong,
             int nameRowNumber, int typeRowNumber,
             int belongRowNumber, int commentRowNumber,
             int dataStartComment, bool readAllSheet
@@ -42,7 +47,7 @@ namespace Convert.Tools
 
             foreach (string file in files)
             {
-                excelRead.ReadExcel(file);
+                excelRead.ReadExcel(file, checkBelong);
             }
             List<ExcelDataTable> list = new List<ExcelDataTable>();
             foreach (var item in excelRead.Tables.Values)

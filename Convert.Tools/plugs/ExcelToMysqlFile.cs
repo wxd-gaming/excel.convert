@@ -26,7 +26,7 @@ namespace Plugs
 
             string outPath = "out\\sql\\" + DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + "\\";
 
-            List<ExcelDataTable> dataTables = files.AsDataTable();
+            List<ExcelDataTable> dataTables = files.AsDataTable("server");
 
             CreateTable(outPath, dataTables);
             InsertSql(outPath, dataTables);

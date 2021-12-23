@@ -10,7 +10,7 @@ namespace Plugs
     public class ExcelToJavaCode : IOutPutPlugs
     {
 
-        string outPath = "d:\\out";
+        string outPath = "out\\code";
         string package = "com.tb.po";
 
         public PlugEnum plugEnum()
@@ -25,7 +25,7 @@ namespace Plugs
 
         public void DoAction(List<string> files)
         {
-            List<ExcelDataTable> dataTables = files.AsDataTable();
+            List<ExcelDataTable> dataTables = files.AsDataTable("server");
             foreach (ExcelDataTable dataTable in dataTables)
             {
                 CreateCode_Bean(dataTable);

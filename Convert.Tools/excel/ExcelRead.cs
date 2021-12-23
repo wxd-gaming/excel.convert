@@ -22,13 +22,15 @@ namespace Convert.Tools.Excel
         /// 数据读取其实行
         /// </summary>
         public int DataStartRowNumber = 2;
+        public string Belong = "all";
+
 
         /// <summary>
         /// 所有的表
         /// </summary>
         public Dictionary<string, ExcelDataTable> Tables = new Dictionary<string, ExcelDataTable>();
 
-        public void ReadExcel(string excelPath)
+        public void ReadExcel(string excelPath, string checkBelong)
         {
             string fileName = Path.GetFileName(excelPath);
             try
@@ -58,8 +60,8 @@ namespace Convert.Tools.Excel
                         for (int i = 0; i < forCount; i++)
                         {
                             ISheet sheet = wk.GetSheetAt(i);
-                            ActionColumn(excelPath, sheet);
-                            ActionData(excelPath, sheet);
+                            ActionColumn(excelPath, sheet, checkBelong);
+                            ActionData(excelPath, sheet, checkBelong);
                         }
                     }
                 }
@@ -71,7 +73,7 @@ namespace Convert.Tools.Excel
             }
         }
 
-        private void ActionColumn(string excelPath, ISheet sheet)
+        private void ActionColumn(string excelPath, ISheet sheet, string checkBelong)
         {
             //这里是记录行
             int lastRowNum = sheet.LastRowNum;
@@ -118,7 +120,7 @@ namespace Convert.Tools.Excel
                 ICell typeCell = typeRow.GetCell(k);
                 ICell belongCell = belongRow.GetCell(k);
                 ICell commontCell = commentRow.GetCell(k);
-                ActionColumn(excelPath, sheetName, dataTable, columnNames, columnCell, columnCell, columnCell, commontCell);
+                ActionColumn(excelPath, sheetName, dataTable, columnNames, checkBelong, columnCell, columnCell, columnCell, commontCell);
             }
 
         }
@@ -139,6 +141,7 @@ namespace Convert.Tools.Excel
         private ExcelDataColumn ActionColumn(string filePath, string sheetName,
             ExcelDataTable dataTable,
             HashSet<string> columnNames,
+            string checkBelong,
             ICell columnCell, ICell typeCell, ICell belongCell, ICell commontCell)
         {
             string belong = CellValue(belongCell);
@@ -169,6 +172,17 @@ namespace Convert.Tools.Excel
             {
                 throw new RuntimeException("文件：" + filePath + " 配置sheet " + sheetName + " 存在相同的字段 " + columnName);
             }
+            if (columnNames == null)
+            {
+                if (dataTable.Columns.ContainsKey(columnName))
+                {
+                    return dataTable.Columns[columnName];
+                }
+                else
+                {
+                    return null;
+                }
+            }
 
             if (!dataTable.Columns.ContainsKey(columnName))
             {
@@ -189,6 +203,11 @@ namespace Convert.Tools.Excel
                     {
                         dataColumn.BeLong = "server";
                     }
+                }
+
+                if (dataColumn.NoBeLong(checkBelong))
+                {
+                    return null;
                 }
 
                 string vtype = typeCell.ToString().ToLower();
@@ -313,7 +332,7 @@ namespace Convert.Tools.Excel
         /// 读取数据行
         /// </summary>
         /// <param name="sheet"></param>
-        private void ActionData(string excelPath, ISheet sheet)
+        private void ActionData(string excelPath, ISheet sheet, string checkBelong)
         {
             string sheetName = Convert(sheet.SheetName);
             if (!Tables.ContainsKey(sheetName))
@@ -365,7 +384,7 @@ namespace Convert.Tools.Excel
 
                         if (columnCell != null)
                         {
-                            ExcelDataColumn dataColumn = ActionColumn(excelPath, sheetName, dataTable, null, columnCell, typeCell, belongCell, commontCell);
+                            ExcelDataColumn dataColumn = ActionColumn(excelPath, sheetName, dataTable, null, checkBelong, columnCell, typeCell, belongCell, commontCell);
                             if (dataColumn != null)
                             {
                                 keyValuePairs[dataColumn.Name] = CellValue(dataColumn.ValueType, dataCell);

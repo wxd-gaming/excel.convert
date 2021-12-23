@@ -12,7 +12,7 @@ namespace Plugs
     public class ExcelToJsonFile : IOutPutPlugs
     {
 
-        string outPath = "d:\\out\\json";
+        string outPath = "out\\json";
 
         public PlugEnum plugEnum()
         {
@@ -25,7 +25,7 @@ namespace Plugs
         }
         public void DoAction(List<string> files)
         {
-            List<ExcelDataTable> dataTables = files.AsDataTable();
+            List<ExcelDataTable> dataTables = files.AsDataTable("server");
             foreach (ExcelDataTable dataTable in dataTables)
             {
                 string fileName = outPath + "\\" + dataTable.Name + ".json";

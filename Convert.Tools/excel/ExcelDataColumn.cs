@@ -38,6 +38,14 @@ namespace Convert.Tools.Excel
         /// </summary>        
         public bool Key { get; set; }
 
+        public bool NoBeLong(string belong)
+        {
+            return !(string.IsNullOrWhiteSpace(belong)
+                || string.IsNullOrWhiteSpace(this.BeLong)
+                || "all".Equals(belong, StringComparison.OrdinalIgnoreCase)
+                || "all".Equals(this.BeLong, StringComparison.OrdinalIgnoreCase)
+                || this.BeLong.Equals(belong, StringComparison.OrdinalIgnoreCase));
+        }
 
     }
 }

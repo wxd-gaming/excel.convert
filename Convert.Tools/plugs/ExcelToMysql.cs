@@ -48,7 +48,7 @@ namespace Plugs
 
         public void DoAction(List<string> files)
         {
-            List<ExcelDataTable> dataTables = files.AsDataTable();
+            List<ExcelDataTable> dataTables = files.AsDataTable("server");
             foreach (ExcelDataTable dataTable in dataTables)
             {
                 string ddl = dataTable.AsDdl();
