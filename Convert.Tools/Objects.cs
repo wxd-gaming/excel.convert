@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Convert.Tools
@@ -19,6 +20,11 @@ namespace Convert.Tools
         public static List<ExcelDataTable> AsDataTable(this List<string> files, string checkBelong)
         {
             return AsDataTable(files, checkBelong, 0, 0, 0, 1, 2, false);
+        }
+
+        public static bool IsNumeric(this string value)
+        {
+            return Regex.IsMatch(value, @"^[+-]?\d*[.]?\d*$");
         }
 
         /// <summary>
