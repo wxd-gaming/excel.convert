@@ -11,16 +11,17 @@ public static class SqlExtend
     public static string AsDdl(this ExcelDataTable dataTable)
     {
         StringBuilder builder = new StringBuilder();
+        AsDdl(dataTable, builder);
         return builder.ToString();
     }
 
     public static void AsDdl(this ExcelDataTable dataTable, StringBuilder builder)
     {
-        builder.AppendLine("drop table if exists " + dataTable.Name + ";");
-        builder.AppendLine("CREATE TABLE " + dataTable.Name + "(");
+        builder.AppendLine("drop table if exists `" + dataTable.Name + "`;");
+        builder.AppendLine("CREATE TABLE `" + dataTable.Name + "` (");
         foreach (var column in dataTable.Columns.Values)
         {
-            builder.Append(column.Name).Append(" ");
+            builder.Append("`").Append(column.Name).Append("` ");
             builder.Append(column.SqlType);
             if (column.Key)
             {
@@ -62,7 +63,8 @@ public static class SqlExtend
             foreach (var column in dataTable.Columns.Values)
             {
                 if (appendDH) sql.Append(", ");
-                if ("string".Equals(column.ValueType))
+                if (column.SqlType.Contains("text")
+                    || column.SqlType.Contains("varchar"))
                 {
                     sql.Append("'").Append(row[column.Name]).Append("'");
                 }

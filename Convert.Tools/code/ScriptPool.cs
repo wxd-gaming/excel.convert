@@ -210,7 +210,7 @@ namespace Convert.Tools.Code
                         {
                             fileNames.Add(path);
                             //编译文件
-                            Console.WriteLine("动态加载文件：" + path);
+                            ("动态加载文件：" + path).WriterLog();
                         }
                     }
                     else

@@ -50,10 +50,11 @@ namespace Convert.Tools
             excelRead.CommentRowNumber = commentRowNumber;
             excelRead.DataStartRowNumber = dataStartComment;
             excelRead.ReadAllSheet = readAllSheet;
-
+            excelRead.Belong = checkBelong;
             foreach (string file in files)
             {
-                excelRead.ReadExcel(file, checkBelong);
+                FormMain.ShowLog("开始解析文件：" + file);
+                excelRead.ReadExcel(file);
             }
             List<ExcelDataTable> list = new List<ExcelDataTable>();
             foreach (var item in excelRead.Tables.Values)
@@ -143,6 +144,20 @@ namespace Convert.Tools
             {
                 sw.WriteLine(condent);
                 FormMain.ShowLog("生成：" + filePath);
+            }
+        }
+
+        static string LogFileName = "out\\out.log";
+        public static void WriterLog(this string condent)
+        {
+            string dirPath = System.IO.Path.GetDirectoryName(LogFileName);
+            if (!System.IO.Directory.Exists(dirPath))
+            {
+                System.IO.Directory.CreateDirectory(dirPath);
+            }
+            using (System.IO.StreamWriter sw = new System.IO.StreamWriter(LogFileName, true, new UTF8Encoding(false)))
+            {
+                sw.WriteLine(condent);
             }
         }
 

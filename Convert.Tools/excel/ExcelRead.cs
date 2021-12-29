@@ -30,7 +30,7 @@ namespace Convert.Tools.Excel
         /// </summary>
         public Dictionary<string, ExcelDataTable> Tables = new Dictionary<string, ExcelDataTable>();
 
-        public void ReadExcel(string excelPath, string checkBelong)
+        public void ReadExcel(string excelPath)
         {
             string fileName = Path.GetFileName(excelPath);
             try
@@ -60,20 +60,20 @@ namespace Convert.Tools.Excel
                         for (int i = 0; i < forCount; i++)
                         {
                             ISheet sheet = wk.GetSheetAt(i);
-                            ActionColumn(excelPath, sheet, checkBelong);
-                            ActionData(excelPath, sheet, checkBelong);
+                            ActionColumn(excelPath, sheet);
+                            ActionData(excelPath, sheet);
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                FormMain.ShowLog.Invoke("excel文件并且处于关闭状态：" + fileName);
-                Console.WriteLine(e);
+
+                throw new RuntimeException("excel文件并且处于关闭状态：" + fileName + ", " + e.Message);
             }
         }
 
-        private void ActionColumn(string excelPath, ISheet sheet, string checkBelong)
+        private void ActionColumn(string excelPath, ISheet sheet)
         {
             //这里是记录行
             int lastRowNum = sheet.LastRowNum;
@@ -120,9 +120,13 @@ namespace Convert.Tools.Excel
                 ICell typeCell = typeRow.GetCell(k);
                 ICell belongCell = belongRow.GetCell(k);
                 ICell commontCell = commentRow.GetCell(k);
-                ActionColumn(excelPath, sheetName, dataTable, columnNames, checkBelong, columnCell, columnCell, columnCell, commontCell);
+                ActionColumn(excelPath, sheetName, dataTable, columnNames, columnCell, typeCell, belongCell, commontCell);
             }
-
+            if (dataTable.KeyColumn == null)
+            {
+                dataTable.KeyColumn = dataTable.Columns.First().Value;
+                dataTable.KeyColumn.Key = true;
+            }
         }
 
         /// <summary>
@@ -141,7 +145,6 @@ namespace Convert.Tools.Excel
         private ExcelDataColumn ActionColumn(string filePath, string sheetName,
             ExcelDataTable dataTable,
             HashSet<string> columnNames,
-            string checkBelong,
             ICell columnCell, ICell typeCell, ICell belongCell, ICell commontCell)
         {
             string belong = CellValue(belongCell);
@@ -205,7 +208,7 @@ namespace Convert.Tools.Excel
                     }
                 }
 
-                if (dataColumn.NoBeLong(checkBelong))
+                if (dataColumn.NoBeLong(Belong))
                 {
                     return null;
                 }
@@ -280,7 +283,11 @@ namespace Convert.Tools.Excel
                             {
                                 len = int.Parse(vs1[1]);
                             }
-                            catch (Exception e) { Console.WriteLine(e); }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                e.ToString().WriterLog();
+                            }
                         }
                     }
 
@@ -309,11 +316,13 @@ namespace Convert.Tools.Excel
                 {
                     dataColumn.Comment = "";
                 }
+
                 if ("id".Equals(dataColumn.Name, StringComparison.OrdinalIgnoreCase)
                     || vtype.IndexOf("=p") >= 0)
                 {
                     dataColumn.Key = true;
                 }
+
                 if (dataColumn.Key)
                 {
                     if (dataTable.KeyColumn != null)
@@ -323,7 +332,6 @@ namespace Convert.Tools.Excel
                     dataTable.KeyColumn = dataColumn;
                 }
                 dataTable.Columns[columnName] = dataColumn;
-
             }
             return dataTable.Columns[columnName];
         }
@@ -332,7 +340,7 @@ namespace Convert.Tools.Excel
         /// 读取数据行
         /// </summary>
         /// <param name="sheet"></param>
-        private void ActionData(string excelPath, ISheet sheet, string checkBelong)
+        private void ActionData(string excelPath, ISheet sheet)
         {
             string sheetName = Convert(sheet.SheetName);
             if (!Tables.ContainsKey(sheetName))
@@ -384,7 +392,7 @@ namespace Convert.Tools.Excel
 
                         if (columnCell != null)
                         {
-                            ExcelDataColumn dataColumn = ActionColumn(excelPath, sheetName, dataTable, null, checkBelong, columnCell, typeCell, belongCell, commontCell);
+                            ExcelDataColumn dataColumn = ActionColumn(excelPath, sheetName, dataTable, null, columnCell, typeCell, belongCell, commontCell);
                             if (dataColumn != null)
                             {
                                 keyValuePairs[dataColumn.Name] = CellValue(dataColumn.ValueType, dataCell);
@@ -517,8 +525,8 @@ namespace Convert.Tools.Excel
             }
             catch (Exception e)
             {
-                Console.WriteLine(v);
-                Console.WriteLine(e);
+                FormMain.ShowLog(v);
+                throw e;
             }
             return revert;
         }
@@ -544,7 +552,8 @@ namespace Convert.Tools.Excel
             {
                 return true;
             }
-            return string.IsNullOrWhiteSpace(obj.ToString());
+            string v = obj.ToString();
+            return string.IsNullOrWhiteSpace(v) || "#null".Equals(v, StringComparison.OrdinalIgnoreCase);
         }
 
     }

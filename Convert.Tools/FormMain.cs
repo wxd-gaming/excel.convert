@@ -57,11 +57,11 @@ namespace Convert.Tools
                         var ifi = new ItemFileInfo(itemFile);
                         (this.lb_files.Tag as List<ItemFileInfo>).Add(ifi);
                         this.lb_files.Items.Add(ifi);
-                        ShowLog.Invoke("选择的文件：" + itemFile);
+                        ShowLog("选择的文件：" + itemFile);
                     }
                     else
                     {
-                        ShowLog.Invoke("重复的文件：" + itemFile);
+                        ShowLog("重复的文件：" + itemFile);
                     }
                 }
             }
@@ -118,6 +118,7 @@ namespace Convert.Tools
                 {
                     this.tb_log.Text = str + "\r\n" + this.tb_log.Text;
                 }));
+                str.WriterLog();
             };
 
             this.lb_files.Tag = new List<ItemFileInfo>();
@@ -155,62 +156,80 @@ namespace Convert.Tools
 
         private void tsmi_excel_plus_all_Click(object sender, EventArgs e)
         {
-            List<string> list = GetFiles(".xls", ".xlsx");
-            foreach (var plug in scriptPool.Enumerable())
+            new Action(() =>
             {
-                if (plug.plugEnum() == PlugEnum.Excel)
+                List<string> list = GetFiles(".xls", ".xlsx");
+                foreach (var plug in scriptPool.Enumerable())
                 {
-                    plug.DoAction(list);
+                    if (plug.plugEnum() == PlugEnum.Excel)
+                    {
+                        plug.DoAction(list);
+                    }
                 }
-            }
+            }).BeginInvoke(null, null);
         }
 
         private void tsmi_xml_plug_all_Click(object sender, EventArgs e)
         {
-            List<string> list = GetFiles(".xml");
-            foreach (var plug in scriptPool.Enumerable())
+            new Action(() =>
             {
-                if (plug.plugEnum() == PlugEnum.Xml)
+                List<string> list = GetFiles(".xml");
+                foreach (var plug in scriptPool.Enumerable())
                 {
-                    plug.DoAction(list);
+                    if (plug.plugEnum() == PlugEnum.Xml)
+                    {
+                        plug.DoAction(list);
+                    }
                 }
-            }
+            }).BeginInvoke(null, null);
         }
 
         private void tsmi_protobuf_all_Click(object sender, EventArgs e)
         {
-            List<string> list = GetFiles(".proto");
-            foreach (var plug in scriptPool.Enumerable())
+            new Action(() =>
             {
-                if (plug.plugEnum() == PlugEnum.Protobuf)
+                List<string> list = GetFiles(".proto");
+                foreach (var plug in scriptPool.Enumerable())
                 {
-                    plug.DoAction(list);
+                    if (plug.plugEnum() == PlugEnum.Protobuf)
+                    {
+                        plug.DoAction(list);
+                    }
                 }
-            }
+            }).BeginInvoke(null, null);
         }
 
         private void Excel_Plug_Click(object sender, EventArgs e)
         {
-            List<string> list = GetFiles(".xls", ".xlsx");
-            ToolStripItem ts = (ToolStripItem)sender;
-            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
-            outPutPlugs.DoAction(list);
+            new Action(() =>
+            {
+                List<string> list = GetFiles(".xls", ".xlsx");
+                ToolStripItem ts = (ToolStripItem)sender;
+                IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+                outPutPlugs.DoAction(list);
+            }).BeginInvoke(null, null);
         }
 
         private void Xml_Plug_Click(object sender, EventArgs e)
         {
-            List<string> list = GetFiles(".xml");
-            ToolStripItem ts = (ToolStripItem)sender;
-            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
-            outPutPlugs.DoAction(list);
+            new Action(() =>
+            {
+                List<string> list = GetFiles(".xml");
+                ToolStripItem ts = (ToolStripItem)sender;
+                IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+                outPutPlugs.DoAction(list);
+            }).BeginInvoke(null, null);
         }
 
         private void Protobuf_Plug_Click(object sender, EventArgs e)
         {
-            List<string> list = GetFiles(".proto");
-            ToolStripItem ts = (ToolStripItem)sender;
-            IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
-            outPutPlugs.DoAction(list);
+            new Action(() =>
+            {
+                List<string> list = GetFiles(".proto");
+                ToolStripItem ts = (ToolStripItem)sender;
+                IOutPutPlugs outPutPlugs = ts.Tag as IOutPutPlugs;
+                outPutPlugs.DoAction(list);
+            }).BeginInvoke(null, null);
         }
 
         /// <summary>
