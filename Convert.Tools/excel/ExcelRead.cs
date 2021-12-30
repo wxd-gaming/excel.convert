@@ -1,4 +1,5 @@
-﻿using NPOI.HSSF.UserModel;
+﻿using Newtonsoft.Json;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.Formula.Eval;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -24,6 +25,8 @@ namespace Convert.Tools.Excel
         public int DataStartRowNumber = 2;
         public string Belong = "all";
 
+        public char ArraySplit_1 = ':';
+        public char ArraySplit_2 = ',';
 
         /// <summary>
         /// 所有的表
@@ -68,8 +71,9 @@ namespace Convert.Tools.Excel
             }
             catch (Exception e)
             {
-
-                throw new RuntimeException("excel文件并且处于关闭状态：" + fileName + ", " + e.Message);
+                Console.WriteLine(e);
+                e.ToString().WriterLog();
+                throw new RuntimeException("确保excel文件处于关闭状态：" + fileName + ", " + e.Message);
             }
         }
 
@@ -362,9 +366,9 @@ namespace Convert.Tools.Excel
 
             if (sheet.LastRowNum > 2)
             {
-                for (int i = DataStartRowNumber; i <= sheet.LastRowNum; i++)
+                for (int rowNumber = DataStartRowNumber; rowNumber <= sheet.LastRowNum; rowNumber++)
                 {
-                    IRow rowData = sheet.GetRow(i); //读取当前行数据
+                    IRow rowData = sheet.GetRow(rowNumber); //读取当前行数据
                     if (rowData == null)
                     {
                         return;
@@ -382,20 +386,20 @@ namespace Convert.Tools.Excel
                     return;
                 lab_001:
                     Dictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                    for (int k = 0; k < columnRow.LastCellNum; k++)  //LastCellNum 是当前行的总列数
+                    for (int columnNumber = 0; columnNumber < columnRow.LastCellNum; columnNumber++)  //LastCellNum 是当前行的总列数
                     {
-                        ICell columnCell = columnRow.GetCell(k);
-                        ICell typeCell = typeRow.GetCell(k);
-                        ICell belongCell = belongRow.GetCell(k);
-                        ICell commontCell = commentRow.GetCell(k);
-                        ICell dataCell = rowData.GetCell(k);
+                        ICell columnCell = columnRow.GetCell(columnNumber);
+                        ICell typeCell = typeRow.GetCell(columnNumber);
+                        ICell belongCell = belongRow.GetCell(columnNumber);
+                        ICell commontCell = commentRow.GetCell(columnNumber);
+                        ICell dataCell = rowData.GetCell(columnNumber);
 
                         if (columnCell != null)
                         {
                             ExcelDataColumn dataColumn = ActionColumn(excelPath, sheetName, dataTable, null, columnCell, typeCell, belongCell, commontCell);
                             if (dataColumn != null)
                             {
-                                keyValuePairs[dataColumn.Name] = CellValue(dataColumn.ValueType, dataCell);
+                                keyValuePairs[dataColumn.Name] = CellValue(rowNumber + 1, columnNumber + 1, dataColumn.Name, dataColumn.ValueType, dataCell);
                             }
                         }
                     }
@@ -471,7 +475,7 @@ namespace Convert.Tools.Excel
             }
         }
 
-        private object CellValue(string type, ICell cell)
+        private object CellValue(int rowNumber, int columnNumber, string columnName, string type, ICell cell)
         {
             string v = CellValue(cell);
             object revert = null;
@@ -480,52 +484,263 @@ namespace Convert.Tools.Excel
                 switch (type)
                 {
                     case "bool":
-                        if (IsNullOrWhiteSpace(v))
-                            revert = false;
-                        else
-                            revert = bool.Parse(v.ToString());
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = false;
+                            else
+                                revert = bool.Parse(v.ToString());
+                        }
                         break;
                     case "byte":
-                        if (IsNullOrWhiteSpace(v))
-                            revert = 0;
-                        else
-                            revert = ((byte)double.Parse(v.ToString()));
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = 0;
+                            else
+                                revert = ((byte)double.Parse(v.ToString()));
+                        }
                         break;
                     case "short":
-                        if (IsNullOrWhiteSpace(v))
-                            revert = 0;
-                        else
-                            revert = ((short)double.Parse(v.ToString()));
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = 0;
+                            else
+                                revert = ((short)double.Parse(v.ToString()));
+                        }
                         break;
                     case "int":
-                        if (IsNullOrWhiteSpace(v))
-                            revert = 0;
-                        else
-                            revert = ((int)double.Parse(v.ToString()));
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = 0;
+                            else
+                                revert = ((int)double.Parse(v.ToString()));
+                        }
+                        break;
+                    case "int[]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_1);
+                                List<int> vs1 = new List<int>();
+                                for (int i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        vs1.Add((int)double.Parse(vs[i]));
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
+                        break;
+                    case "int[][]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_2);
+                                List<List<int>> vs1 = new List<List<int>>();
+                                for (int i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        string[] vs2 = vs[i].Split(ArraySplit_1);
+                                        List<int> vs3 = new List<int>();
+                                        for (int j = 0; j < vs2.Length; j++)
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(vs2[j]))
+                                            {
+                                                vs3.Add((int)double.Parse(vs2[j]));
+                                            }
+                                        }
+                                        vs1.Add(vs3);
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
                         break;
                     case "long":
-                        if (IsNullOrWhiteSpace(v))
-                            revert = 0;
-                        else
-                            revert = ((long)double.Parse(v.ToString()));
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = 0;
+                            else
+                                revert = ((long)double.Parse(v.ToString()));
+                        }
+                        break;
+                    case "long[]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_1);
+                                List<long> vs1 = new List<long>();
+                                for (long i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        vs1.Add((long)double.Parse(vs[i]));
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
+                        break;
+                    case "long[][]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_2);
+                                List<List<long>> vs1 = new List<List<long>>();
+                                for (int i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        string[] vs2 = vs[i].Split(ArraySplit_1);
+                                        List<long> vs3 = new List<long>();
+                                        for (int j = 0; j < vs2.Length; j++)
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(vs2[j]))
+                                            {
+                                                vs3.Add((long)double.Parse(vs2[j]));
+                                            }
+                                        }
+                                        vs1.Add(vs3);
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
                         break;
                     case "float":
-                        if (IsNullOrWhiteSpace(v))
-                            revert = 0;
-                        else
-                            revert = ((float)double.Parse(v.ToString()));
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = 0f;
+                            else
+                                revert = (float)double.Parse(v.ToString());
+                        }
+                        break;
+                    case "float[]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_1);
+                                List<long> vs1 = new List<long>();
+                                for (int i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        vs1.Add((long)double.Parse(vs[i]));
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
+                        break;
+                    case "float[][]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_2);
+                                List<List<float>> vs1 = new List<List<float>>();
+                                for (int i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        string[] vs2 = vs[i].Split(ArraySplit_1);
+                                        List<float> vs3 = new List<float>();
+                                        for (int j = 0; j < vs2.Length; j++)
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(vs2[j]))
+                                            {
+                                                vs3.Add((float)double.Parse(vs2[j]));
+                                            }
+                                        }
+                                        vs1.Add(vs3);
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
+                        break;
+                    case "double":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = 0d;
+                            else
+                                revert = double.Parse(v.ToString());
+                        }
+                        break;
+                    case "double[]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_1);
+                                List<double> vs1 = new List<double>();
+                                for (int i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        vs1.Add(double.Parse(vs[i]));
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
+                        break;
+                    case "double[][]":
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "[]";
+                            else
+                            {
+                                string[] vs = v.ToString().Split(ArraySplit_2);
+                                List<List<double>> vs1 = new List<List<double>>();
+                                for (int i = 0; i < vs.Length; i++)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(vs[i]))
+                                    {
+                                        string[] vs2 = vs[i].Split(ArraySplit_1);
+                                        List<double> vs3 = new List<double>();
+                                        for (int j = 0; j < vs2.Length; j++)
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(vs2[j]))
+                                            {
+                                                vs3.Add(double.Parse(vs2[j]));
+                                            }
+                                        }
+                                        vs1.Add(vs3);
+                                    }
+                                }
+                                revert = JsonConvert.SerializeObject(vs1);
+                            }
+                        }
                         break;
                     default:
-                        if (IsNullOrWhiteSpace(v))
-                            revert = "";
-                        else
-                            revert = v.ToString();
+                        {
+                            if (IsNullOrWhiteSpace(v))
+                                revert = "";
+                            else
+                                revert = v.ToString();
+                        }
                         break;
                 }
             }
             catch (Exception e)
             {
-                FormMain.ShowLog(v);
+                FormMain.ShowLog("类型：" + type + ", 数据：" + v + ", 异常：" + e.Message);
+                FormMain.ShowLog("数据行：" + rowNumber + ", 列：" + columnNumber + ", 名：" + columnName);
                 throw e;
             }
             return revert;
