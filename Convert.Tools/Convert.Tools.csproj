@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BAC714D7-7494-4947-B4F9-5AD2EB6E0A23}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Convert.Tools</RootNamespace>
-    <AssemblyName>Convert.Tools</AssemblyName>
+    <RootNamespace>Excel.Convert</RootNamespace>
+    <AssemblyName>Excel.Convert</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -111,6 +111,9 @@
   <ItemGroup>
     <Compile Include="Code\IOutPutPlugs.cs" />
     <Compile Include="Code\PlugEnum.cs" />
+    <Compile Include="Plugs\ExcelToJsonFile3.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Plugs\ExcelToJsonFile2.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

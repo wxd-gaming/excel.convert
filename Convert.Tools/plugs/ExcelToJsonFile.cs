@@ -1,6 +1,6 @@
-﻿using Convert.Tools;
-using Convert.Tools.Code;
-using Convert.Tools.Excel;
+﻿using Excel.Convert;
+using Excel.Convert.Code;
+using Excel.Convert.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Plugs
     public class ExcelToJsonFile : IOutPutPlugs
     {
 
-        string outPath = "out\\json";
+        string outPath = "out\\json\\java";
 
         public PlugEnum plugEnum()
         {

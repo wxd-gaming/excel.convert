@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Convert.Tools.Properties {
+namespace Excel.Convert.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

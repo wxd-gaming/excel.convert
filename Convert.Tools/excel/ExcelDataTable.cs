@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Convert.Tools.Excel
+namespace Excel.Convert.Excel
 {
     public class ExcelDataTable
     {

@@ -1,4 +1,4 @@
-﻿using Convert.Tools;
+﻿using Excel.Convert;
 using Microsoft.CSharp;
 using System;
 using System.Data;
@@ -16,7 +16,7 @@ using System.Reflection;
  * @phone 13882122019
  * 
  */
-namespace Convert.Tools.Code
+namespace Excel.Convert.Code
 {
     /// <summary>
     /// 加载脚本文件

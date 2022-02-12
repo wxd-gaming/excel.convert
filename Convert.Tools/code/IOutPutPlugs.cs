@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Convert.Tools.Code
+namespace Excel.Convert.Code
 {
     public interface IOutPutPlugs
     {
