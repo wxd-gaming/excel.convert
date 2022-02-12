@@ -70,9 +70,8 @@ namespace Excel.Convert.Excel
                 }
             }
             catch (Exception e)
-            {
-                Console.WriteLine(e);
-                e.ToString().WriterLog();
+            {                
+                FormMain.ShowLog(Program.GetExceptionMsg(e, excelPath));
                 throw new RuntimeException("确保excel文件处于关闭状态：" + fileName + ", " + e.Message);
             }
         }
@@ -275,7 +274,7 @@ namespace Excel.Convert.Excel
                 }
                 else if ("string".Equals(vtype) || vtype.IndexOf("=s") >= 0)
                 {
-                    dataColumn.ValueType = "string";
+                    dataColumn.ValueType = "String";
                     int len = 100;
                     string[] vs = vtype.Split('=');
                     foreach (var item in vs)

@@ -12,7 +12,7 @@ namespace Plugs
     public class ExcelToJsonFile3 : IOutPutPlugs
     {
 
-        string outPath = "..\\out\\json";
+        string outPath = "..\\out\\json\\client";
 
         public PlugEnum plugEnum()
         {

@@ -12,7 +12,7 @@ namespace Plugs
     public class ExcelToJsonFile : IOutPutPlugs
     {
 
-        string outPath = "out\\json\\java";
+        string outPath = "..\\out\\json\\java";
 
         public PlugEnum plugEnum()
         {
@@ -21,7 +21,7 @@ namespace Plugs
 
         public string PlugsName()
         {
-            return "导出 Json File";
+            return "导出 Jpa Json File";
         }
         public void DoAction(List<string> files)
         {

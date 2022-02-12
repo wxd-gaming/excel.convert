@@ -10,8 +10,8 @@ namespace Plugs
     public class ExcelToJavaCode : IOutPutPlugs
     {
 
-        string outPath = "out\\code";
-        string package = "com.tb.po";
+        string outPath = "..\\..\\server\\com.fish.server\\src\\main\\java";
+        string package = "com.fish.server.po";
 
         public PlugEnum plugEnum()
         {
@@ -58,12 +58,11 @@ namespace Plugs
             append.Append("package ").Append(package).Append(".bean;").AppendLine();
             append.AppendLine();
             append.AppendLine();
-            append.Append("import com.tb.batis.struct.DbColumn;").AppendLine();
-            append.Append("import com.tb.batis.struct.DbTable;").AppendLine();
-            append.Append(" import com.tb.batis.struct.DataBaseModel;").AppendLine();
             append.Append("import lombok.Getter;").AppendLine();
             append.Append("import lombok.Setter;").AppendLine();
             append.Append("import lombok.experimental.Accessors;").AppendLine();
+            append.Append("import org.wxd.batis.struct.DbColumn;").AppendLine();
+            append.Append("import org.wxd.batis.struct.DbTable;").AppendLine();
             append.AppendLine();
             append.Append("/**").AppendLine();
             append.Append(" * ").Append(dataTable.Comment).AppendLine();
@@ -72,7 +71,7 @@ namespace Plugs
             append.Append("@Setter").AppendLine();
             append.Append("@Accessors(chain = true)").AppendLine();
             append.Append("@DbTable(mappedSuperclass = true, name = \"").Append(dataTable.Name).Append("\")").AppendLine();
-            append.Append("public abstract class " + dataTable.CodeName + "Bean extends DataBaseModel {").AppendLine();
+            append.Append("public abstract class " + dataTable.CodeName + "Bean {").AppendLine();
             append.AppendLine();
             foreach (var item in dataTable.Columns.Values)
             {
@@ -85,7 +84,7 @@ namespace Plugs
                     append.Append(", key = true");
                 }
                 append.Append(")").AppendLine();
-                append.Append("    privte ").Append(item.ValueType).Append(" ").Append(item.CodeName).Append(";").AppendLine();
+                append.Append("    private ").Append(item.ValueType).Append(" ").Append(item.CodeName).Append(";").AppendLine();
 
             }
             append.AppendLine();
@@ -108,12 +107,12 @@ namespace Plugs
             append.Append("package ").Append(package).Append(".extend;").AppendLine();
             append.AppendLine();
             append.AppendLine();
-            append.Append("import com.tb.batis.struct.DbColumn;").AppendLine();
-            append.Append("import com.tb.batis.struct.DbTable;").AppendLine();
-            append.Append(" import com.tb.batis.struct.DataBaseModel;").AppendLine();
             append.Append("import lombok.Getter;").AppendLine();
             append.Append("import lombok.Setter;").AppendLine();
             append.Append("import lombok.experimental.Accessors;").AppendLine();
+            append.Append("import org.wxd.batis.struct.DbColumn;").AppendLine();
+            append.Append("import org.wxd.batis.struct.DbTable;").AppendLine();
+            append.Append("import ").Append(package).Append(".bean.").Append(dataTable.CodeName).Append("Bean;").AppendLine();
             append.AppendLine();
             append.Append("/**").AppendLine();
             append.Append(" * ").Append(dataTable.Comment).AppendLine();
@@ -146,12 +145,12 @@ namespace Plugs
             append.Append("package ").Append(package).Append(".factory;").AppendLine();
             append.AppendLine();
             append.AppendLine();
-            append.Append("import com.tb.batis.struct.DbColumn;").AppendLine();
-            append.Append("import com.tb.batis.struct.DbTable;").AppendLine();
-            append.Append(" import com.tb.batis.struct.DataBaseModel;").AppendLine();
             append.Append("import lombok.Getter;").AppendLine();
             append.Append("import lombok.Setter;").AppendLine();
             append.Append("import lombok.experimental.Accessors;").AppendLine();
+            append.Append("import org.wxd.batis.struct.DbBean;").AppendLine();
+            append.Append("import org.wxd.batis.struct.DbTable;").AppendLine();
+            append.Append("import ").Append(package).Append(".extend.").Append(dataTable.CodeName).Append("Extend;").AppendLine();
             append.AppendLine();
             append.Append("/**").AppendLine();
             append.Append(" * ").Append(dataTable.Comment).AppendLine();
@@ -159,8 +158,7 @@ namespace Plugs
             append.Append("@Getter").AppendLine();
             append.Append("@Setter").AppendLine();
             append.Append("@Accessors(chain = true)").AppendLine();
-            append.Append("@DbTable(name = \"").Append(dataTable.Name).Append("\")").AppendLine();
-            append.Append("public class " + dataTable.CodeName + "Factory ").Append(" {").AppendLine();
+            append.Append("public class " + dataTable.CodeName + "Factory extends DbBean<").Append(dataTable.CodeName).Append("Extend> {").AppendLine();
             append.AppendLine();
             append.AppendLine();
             append.Append("}").AppendLine();
