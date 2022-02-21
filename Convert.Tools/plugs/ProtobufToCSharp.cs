@@ -10,7 +10,7 @@ namespace Plugs
     public class ProtobufToCSharp : IOutPutPlugs
     {
 
-        string DefaultOutDir = "d:\\out\\protobuf\\cs";
+        string DefaultOutDir = "out\\protobuf\\cs";
 
         public PlugEnum plugEnum()
         {

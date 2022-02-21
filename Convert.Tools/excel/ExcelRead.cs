@@ -551,7 +551,7 @@ namespace Excel.Convert.Excel
                                         {
                                             if (!string.IsNullOrWhiteSpace(vs2[j]))
                                             {
-                                                vs3[i] = ((int)double.Parse(vs2[j]));
+                                                vs3[j] = ((int)double.Parse(vs2[j]));
                                             }
                                         }
                                         vs1[i] = vs3;

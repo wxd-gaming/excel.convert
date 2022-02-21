@@ -10,7 +10,7 @@ namespace Plugs
     public class Protobuf3ToJava : IOutPutPlugs
     {
 
-        string DefaultOutDir = "d:\\out\\protobuf\\java";
+        string DefaultOutDir = "out\\protobuf\\java";
 
         public PlugEnum plugEnum()
         {
