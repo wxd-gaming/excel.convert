@@ -35,7 +35,7 @@ namespace Plugs
             字段数据起始行号
             是否读取所有的 sheet 标签页
              */
-            List<ExcelDataTable> dataTables = files.AsDataTable("all", 2, 3, 1, 4, 5, false);
+            List<ExcelDataTable> dataTables = files.AsDataTable("all", 2, 3, 1, 4, 5, true);
             if (dataTables.Count == 0)
             {
                 return;

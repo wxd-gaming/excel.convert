@@ -70,7 +70,7 @@ namespace Excel.Convert.Excel
                 }
             }
             catch (Exception e)
-            {                
+            {
                 FormMain.ShowLog(Program.GetExceptionMsg(e, excelPath));
                 throw new RuntimeException("确保excel文件处于关闭状态：" + fileName + ", " + e.Message);
             }
@@ -529,35 +529,35 @@ namespace Excel.Convert.Excel
                                         vs1.Add((int)double.Parse(vs[i]));
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;
                     case "int[][]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new int[0][];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_2);
-                                List<List<int>> vs1 = new List<List<int>>();
+                                int[][] vs1 = new int[vs.Length][];
                                 for (int i = 0; i < vs.Length; i++)
                                 {
                                     if (!string.IsNullOrWhiteSpace(vs[i]))
                                     {
                                         string[] vs2 = vs[i].Split(ArraySplit_1);
-                                        List<int> vs3 = new List<int>();
+                                        int[] vs3 = new int[vs2.Length];
                                         for (int j = 0; j < vs2.Length; j++)
                                         {
                                             if (!string.IsNullOrWhiteSpace(vs2[j]))
                                             {
-                                                vs3.Add((int)double.Parse(vs2[j]));
+                                                vs3[i] = ((int)double.Parse(vs2[j]));
                                             }
                                         }
-                                        vs1.Add(vs3);
+                                        vs1[i] = vs3;
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;
@@ -572,47 +572,47 @@ namespace Excel.Convert.Excel
                     case "long[]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new long[0];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_1);
-                                List<long> vs1 = new List<long>();
+                                long[] vs1 = new long[vs.Length];
                                 for (long i = 0; i < vs.Length; i++)
                                 {
                                     if (!string.IsNullOrWhiteSpace(vs[i]))
                                     {
-                                        vs1.Add((long)double.Parse(vs[i]));
+                                        vs1[i] = ((long)double.Parse(vs[i]));
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;
                     case "long[][]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new long[0][];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_2);
-                                List<List<long>> vs1 = new List<List<long>>();
+                                long[][] vs1 = new long[vs.Length][];
                                 for (int i = 0; i < vs.Length; i++)
                                 {
                                     if (!string.IsNullOrWhiteSpace(vs[i]))
                                     {
                                         string[] vs2 = vs[i].Split(ArraySplit_1);
-                                        List<long> vs3 = new List<long>();
+                                        long[] vs3 = new long[vs2.Length];
                                         for (int j = 0; j < vs2.Length; j++)
                                         {
                                             if (!string.IsNullOrWhiteSpace(vs2[j]))
                                             {
-                                                vs3.Add((long)double.Parse(vs2[j]));
+                                                vs3[j] = ((long)double.Parse(vs2[j]));
                                             }
                                         }
-                                        vs1.Add(vs3);
+                                        vs1[i] = vs3;
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;
@@ -627,7 +627,7 @@ namespace Excel.Convert.Excel
                     case "float[]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new float[0];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_1);
@@ -639,35 +639,35 @@ namespace Excel.Convert.Excel
                                         vs1.Add((long)double.Parse(vs[i]));
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;
                     case "float[][]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new float[0][];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_2);
-                                List<List<float>> vs1 = new List<List<float>>();
+                                float[][] vs1 = new float[vs.Length][];
                                 for (int i = 0; i < vs.Length; i++)
                                 {
                                     if (!string.IsNullOrWhiteSpace(vs[i]))
                                     {
                                         string[] vs2 = vs[i].Split(ArraySplit_1);
-                                        List<float> vs3 = new List<float>();
+                                        float[] vs3 = new float[vs2.Length];
                                         for (int j = 0; j < vs2.Length; j++)
                                         {
                                             if (!string.IsNullOrWhiteSpace(vs2[j]))
                                             {
-                                                vs3.Add((float)double.Parse(vs2[j]));
+                                                vs3[j] = (float)double.Parse(vs2[j]);
                                             }
                                         }
-                                        vs1.Add(vs3);
+                                        vs1[i] = vs3;
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;
@@ -682,47 +682,47 @@ namespace Excel.Convert.Excel
                     case "double[]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new double[0];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_1);
-                                List<double> vs1 = new List<double>();
+                                double[] vs1 = new double[vs.Length];
                                 for (int i = 0; i < vs.Length; i++)
                                 {
                                     if (!string.IsNullOrWhiteSpace(vs[i]))
                                     {
-                                        vs1.Add(double.Parse(vs[i]));
+                                        vs1[i] = double.Parse(vs[i]);
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;
                     case "double[][]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new double[0][];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_2);
-                                List<List<double>> vs1 = new List<List<double>>();
+                                double[][] vs1 = new double[vs.Length][];
                                 for (int i = 0; i < vs.Length; i++)
                                 {
                                     if (!string.IsNullOrWhiteSpace(vs[i]))
                                     {
                                         string[] vs2 = vs[i].Split(ArraySplit_1);
-                                        List<double> vs3 = new List<double>();
+                                        double[] vs3 = new double[vs2.Length];
                                         for (int j = 0; j < vs2.Length; j++)
                                         {
                                             if (!string.IsNullOrWhiteSpace(vs2[j]))
                                             {
-                                                vs3.Add(double.Parse(vs2[j]));
+                                                vs3[j] = double.Parse(vs2[j]);
                                             }
                                         }
-                                        vs1.Add(vs3);
+                                        vs1[i] = vs3;
                                     }
                                 }
-                                revert = JsonConvert.SerializeObject(vs1);
+                                revert = vs1;
                             }
                         }
                         break;

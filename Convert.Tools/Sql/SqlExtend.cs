@@ -66,7 +66,7 @@ public static class SqlExtend
                 if (column.SqlType.Contains("text")
                     || column.SqlType.Contains("varchar"))
                 {
-                    sql.Append("'").Append(row[column.Name]).Append("'");
+                    sql.Append("'").Append(Newtonsoft.Json.JsonConvert.SerializeObject(row[column.Name])).Append("'");
                 }
                 else
                 {
