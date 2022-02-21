@@ -517,7 +517,7 @@ namespace Excel.Convert.Excel
                     case "int[]":
                         {
                             if (IsNullOrWhiteSpace(v))
-                                revert = "[]";
+                                revert = new int[0];
                             else
                             {
                                 string[] vs = v.ToString().Split(ArraySplit_1);
