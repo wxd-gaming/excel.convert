@@ -71,7 +71,7 @@ namespace Plugs
             append.Append("@Setter").AppendLine();
             append.Append("@Accessors(chain = true)").AppendLine();
             append.Append("@DbTable(mappedSuperclass = true, name = \"").Append(dataTable.Name).Append("\")").AppendLine();
-            append.Append("public abstract class " + dataTable.CodeName + "Bean {").AppendLine();
+            append.Append("public abstract class " + dataTable.CodeName + "Bean implements DbChecked {").AppendLine();
             append.AppendLine();
             foreach (var item in dataTable.Columns.Values)
             {
