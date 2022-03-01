@@ -60,9 +60,7 @@ namespace Plugs
             append.AppendLine();
             append.Append("import lombok.Getter;").AppendLine();
             append.Append("import lombok.Setter;").AppendLine();
-            append.Append("import lombok.experimental.Accessors;").AppendLine();
-            append.Append("import org.wxd.batis.struct.DbColumn;").AppendLine();
-            append.Append("import org.wxd.batis.struct.DbTable;").AppendLine();
+            append.Append("import org.wxd.batis.struct.*;").AppendLine();
             append.AppendLine();
             append.Append("/**").AppendLine();
             append.Append(" * ").Append(dataTable.Comment).AppendLine();
