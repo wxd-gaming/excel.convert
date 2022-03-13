@@ -101,6 +101,8 @@ namespace Excel.Convert.Excel
 
             string sheetName = Convert(sheet.SheetName);
 
+            string comment = CellValue(sheet.GetRow(0).GetCell(0));
+
             if (sheetName.StartsWith("sheet", StringComparison.OrdinalIgnoreCase))
             {
                 FormMain.ShowLog(excelPath + " 忽律 " + sheetName);
@@ -114,6 +116,7 @@ namespace Excel.Convert.Excel
 
             ExcelDataTable dataTable = Tables[sheetName];
             dataTable.Name = sheetName;
+            dataTable.Comment = comment;
             dataTable.CodeName = sheetName.CodeString().FirstUpper();
 
             HashSet<string> columnNames = new HashSet<string>();
@@ -270,6 +273,26 @@ namespace Excel.Convert.Excel
                 else if ("long[][]".Equals(vtype))
                 {
                     dataColumn.ValueType = "long[][]";
+                    dataColumn.SqlType = "text";
+                }
+                else if ("float[]".Equals(vtype))
+                {
+                    dataColumn.ValueType = "float[]";
+                    dataColumn.SqlType = "text";
+                }
+                else if ("float[][]".Equals(vtype))
+                {
+                    dataColumn.ValueType = "float[][]";
+                    dataColumn.SqlType = "text";
+                }
+                else if ("double[]".Equals(vtype))
+                {
+                    dataColumn.ValueType = "double[]";
+                    dataColumn.SqlType = "text";
+                }
+                else if ("double[][]".Equals(vtype))
+                {
+                    dataColumn.ValueType = "double[][]";
                     dataColumn.SqlType = "text";
                 }
                 else if ("string".Equals(vtype) || vtype.IndexOf("=s") >= 0)

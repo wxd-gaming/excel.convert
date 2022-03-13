@@ -143,7 +143,7 @@ namespace Excel.Convert
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(filePath, false, new UTF8Encoding(false)))
             {
                 sw.WriteLine(condent);
-                FormMain.ShowLog("生成：" + filePath);
+                FormMain.ShowLog("生成：" + Path.GetFullPath(filePath));
             }
         }
 
