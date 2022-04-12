@@ -220,7 +220,7 @@ namespace Excel.Convert.Excel
                 }
 
                 string vtype = typeCell.ToString().ToLower();
-                if ("bool".Equals(vtype) || vtype.IndexOf("=bl") >= 0)
+                if ("bool".Equals(vtype)|| "boolean".Equals(vtype) || vtype.IndexOf("=bl") >= 0)
                 {
                     dataColumn.ValueType = "bool";
                     dataColumn.SqlType = "tinyint(1)";
