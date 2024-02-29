@@ -295,7 +295,7 @@
             this.MainMenuStrip = this.ms_main;
             this.MaximizeBox = false;
             this.Name = "FormMain";
-            this.Text = "数据 读取 OR 转化 & Wu xin dao";
+            this.Text = "数据 读取 OR 转化 & 無心道";
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.gb_files.ResumeLayout(false);
             this.ms_main.ResumeLayout(false);
